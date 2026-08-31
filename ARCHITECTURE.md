@@ -6,82 +6,65 @@
 mysa/
 ├── docs/
 │   ├── provenance.md
-│   ├── specs/00..07
-│   └── samples/                   captured payloads; drive the tests
+│   ├── specs/00..09              the source of truth; every protocol fact is tagged
+│   └── samples/                  captured payloads; drive the tests
 ├── packages/
 │   ├── pymysa/
 │   │   └── src/pymysa/
-│   │       ├── const.py           Cognito ids, mode/fan/swing enums, key ids
-│   │       ├── auth.py            Cognito session and refresh
-│   │       ├── transport/
-│   │       │   ├── rest.py
-│   │       │   └── mqtt.py
-│   │       ├── envelope.py        envelope build and parse
-│   │       ├── capabilities.py    Capability enum, AC discovery
-│   │       ├── fields.py          FieldMap, unwrapping, extraction
+│   │       ├── const.py          Cognito ids, endpoints, client headers
+│   │       ├── auth.py           SRP login, refresh over plain HTTP
+│   │       ├── transport/rest.py the only transport (spec 01)
+│   │       ├── account.py        MysaAccount: discovery, refresh, homes
+│   │       ├── capabilities.py   Capability, the codeset and the capability document
 │   │       ├── devices/
-│   │       │   ├── base.py        MysaDevice
-│   │       │   ├── baseboard_v1.py
-│   │       │   ├── baseboard_v2.py
-│   │       │   ├── baseboard_v3.py
-│   │       │   ├── ac_v1.py
-│   │       │   ├── infloor_v1.py
-│   │       │   ├── central_v1.py
-│   │       │   └── registry.py
-│   │       ├── telemetry.py
-│   │       ├── client.py          MysaClient facade
-│   │       └── debug/
-│   │           ├── __main__.py    capture | replay | redact
-│   │           ├── session.py
-│   │           ├── redact.py
-│   │           └── scripts/       declarative step sequences
+│   │       │   ├── base.py       MysaDevice: identity and the cache
+│   │       │   ├── maps.py       semantic name -> section and key, per model
+│   │       │   ├── readings.py   semantic properties
+│   │       │   ├── declaration.py capabilities, options and setpoint bounds
+│   │       │   └── writing.py    setters and confirmation
+│   │       ├── meanings.py       what a reported value means
+│   │       ├── shapes.py         declared value shapes
+│   │       ├── schedules.py      hold state, and the one write
+│   │       ├── firmware.py       update availability
+│   │       └── debug/            the harness: inspect | exercise | observe | process
 │   └── homeassistant-mysa/
 │       └── custom_components/mysa/
-│           ├── coordinator.py
-│           ├── entity.py
+│           ├── coordinator.py    one per account; the only clock
+│           ├── entity.py         identity, availability, the write path
 │           ├── climate.py  sensor.py  binary_sensor.py
-│           ├── select.py   number.py  switch.py  update.py
+│           ├── select.py   number.py  switch.py  button.py
 │           └── config_flow.py
-└── .github/workflows/
+└── .github/workflows/ci.yml
 ```
 
-## Device classes
+## Where model-specific behaviour lives
 
-A device class declares everything model-specific: matching, command type, field map,
-which fields are wrapped, capabilities, and whether it is verified. Transport, protocol,
-telemetry and integration code are model-agnostic.
+In `devices/maps.py`, `meanings.py` and the capability sources - nowhere else. A model is
+a field map and, where its values are names, an entry in the meanings table. Transport,
+account, telemetry and the whole integration are model-agnostic: nothing outside those
+tables reads the model string to decide what a device supports.
 
-Adding a model is one file in `devices/` and one registry entry.
+There is one `MysaDevice` class rather than a subclass per model. A device is what its
+field map and its declaration say it is, and a model absent from the map is built anyway:
+it reports what it reports and every semantic name reads `None` until the model is
+described.
 
-```python
-class BaseboardV1(MysaDevice):
-    MODEL_MATCH = ModelMatch(prefix="BB-V1")
-    COMMAND_TYPE = 1
-    VERIFIED = True
-    WRAPPED_FIELDS = frozenset({"CorrectedTemp", "SensorTemp", "Humidity"})
-    FIELDS = FieldMap(
-        current_temperature="CorrectedTemp",
-        target_temperature="SetPoint",
-        humidity="Humidity",
-        current="Current",
-        voltage="Voltage",
-        duty_cycle="Duty",
-    )
-    CAPABILITIES = frozenset({
-        Capability.TARGET_TEMPERATURE, Capability.MODE, Capability.CURRENT,
-        Capability.VOLTAGE, Capability.DUTY_CYCLE, Capability.LOCK,
-        Capability.BRIGHTNESS, Capability.PROXIMITY, Capability.ECO_MODE,
-    })
-```
+## Where the integration gets its answers
+
+The integration contains no protocol code (spec 00). It reads `device.capabilities` to
+decide what exists, `device.options(...)` to decide what a control offers, semantic
+properties to read, and `set_*` to write. Where it needs something the SDK does not
+expose, the SDK gains it - `setpoint_range` and `firmware_update` were added that way -
+rather than the integration learning a field name.
 
 ## Testing
 
-- Protocol tests run against the payloads in `docs/samples/`.
-- Each device class has a test asserting every semantic field resolves against its
-  sample, and that a value absent from the payload resolves to `None`.
-- Debug harness bundles are replayed as regression tests.
-- Transport is mocked at the boundary; unit tests make no network calls.
+- Protocol and entity tests both run against the payloads in `docs/samples/`, so what is
+  asserted is what a device actually sends.
+- Transport is faked at the boundary; no test makes a network call.
+- `mypy --strict` on both packages, `ruff` on both, and hassfest on the integration.
 
 ## Tooling
 
-`ruff` for lint and format. `mypy --strict` on `pymysa`. `pytest` for both packages.
+`ruff` for lint. `mypy --strict`. `pytest` for both packages. Modules stay under 300
+lines.
