@@ -12,6 +12,7 @@ from typing import Any
 
 from ..capabilities import declared, settings
 from ..confirm import close
+from ..firmware import FirmwareUpdate
 from ..meanings import name_of
 from ..schedules import ScheduleHold
 from ..transport.rest import MysaRest
@@ -43,6 +44,7 @@ class MysaDevice(Readings, Declaration, Writing):
         self._declared = declared(record.get("SupportedCaps"))
         self._capability_document = capabilities
         self._on_write_failed = on_write_failed
+        self._firmware_update: FirmwareUpdate | None = None
         self._timeout = timeout
         self._interval = interval
 
@@ -79,6 +81,11 @@ class MysaDevice(Readings, Declaration, Writing):
         return bool(self._value("connected"))
 
     @property
+    def firmware_update(self) -> FirmwareUpdate | None:
+        """The last update answer, or None until `refresh_firmware()` reads one."""
+        return self._firmware_update
+
+    @property
     def raw(self) -> dict[str, Any]:
         """The device's own state document, for a field the SDK does not name."""
         return self._document
@@ -98,6 +105,16 @@ class MysaDevice(Readings, Declaration, Writing):
         self._settings = settings(capabilities)
         self._declared = declared(record.get("SupportedCaps"))
         self._capability_document = capabilities
+
+    def adopt_firmware(self, payload: dict[str, Any] | None) -> None:
+        """Take an `/devices/update_available` answer.
+
+        An unreadable one leaves the last answer in place: a device the endpoint cannot
+        answer for has an unknown state, which is not a device with no update.
+        """
+        update = FirmwareUpdate.parse(payload)
+        if update is not None:
+            self._firmware_update = update
 
     def update(self, document: dict[str, Any]) -> None:
         """Take a new state document. Pending writes that have landed are dropped."""

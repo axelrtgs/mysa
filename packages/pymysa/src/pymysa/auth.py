@@ -103,6 +103,24 @@ class MysaAuth:
             assert self._tokens is not None
             return self._tokens.id_token
 
+    @classmethod
+    def from_refresh_token(
+        cls,
+        username: str,
+        refresh_token: str,
+        session: aiohttp.ClientSession | None = None,
+    ) -> MysaAuth:
+        """Auth for a caller that kept the refresh token rather than the password.
+
+        The tokens start expired, so the first request renews the session. Nothing about
+        the SRP login is needed again and pycognito is never imported.
+        """
+        auth = cls(username, session=session)
+        auth.restore(
+            Tokens(id_token="", access_token="", refresh_token=refresh_token, expires_at=0.0)
+        )
+        return auth
+
     def restore(self, tokens: Tokens) -> None:
         """Adopt tokens persisted by a caller, avoiding a password round trip."""
         self._tokens = tokens

@@ -156,6 +156,20 @@ class MysaAccount:
                 _LOGGER.debug("%s: absent from the state batch", device_id)
         return self._devices
 
+    async def refresh_firmware(self) -> Mapping[str, MysaDevice]:
+        """Update availability for every discovered device. One request each.
+
+        Separate from `discover()` because it costs a request per device to answer a
+        question that changes on the backend's schedule (spec 09). A device the endpoint
+        cannot answer for keeps the answer it had.
+        """
+        for device_id, device in self._devices.items():
+            try:
+                device.adopt_firmware(await self.rest.get_update_available(device_id))
+            except MysaError as err:
+                _LOGGER.debug("%s: no firmware answer (%s)", device_id, err)
+        return self._devices
+
     def _included_records(
         self, records: dict[str, dict[str, Any]]
     ) -> dict[str, dict[str, Any]]:

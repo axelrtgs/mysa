@@ -18,6 +18,14 @@ from .maps import Source
 #: An AC-V1-0 returns 404 for one (spec 04). `[observed]`
 OBSERVED_MODES: dict[str, tuple[int, ...]] = {"AC-V1-0": (0, 1, 3, 4, 7, 8)}
 
+#: The resolution a setpoint is accepted at, on every model. Both baseboards declare
+#: `climateControl.heat.setpoint` as 5, 5.5, 6 ... 30 (spec 04); an AC unit declares no
+#: step and is written at the same resolution. `[observed]`
+SETPOINT_STEP = 0.5
+
+#: The bounds a section reports for its own setpoint.
+LOCKOUT = ("lockoutMin", "lockoutMax")
+
 
 class Declaration:
     """Capability derivation. Mixed into `MysaDevice`, which supplies the lookups."""
@@ -30,11 +38,64 @@ class Declaration:
     def model(self) -> str:  # pragma: no cover - supplied by MysaDevice
         raise NotImplementedError
 
+    _record: dict[str, Any]
+
     def _source(self, name: str) -> Source | None:  # pragma: no cover - MysaDevice
         raise NotImplementedError
 
     def _value(self, name: str) -> Any:  # pragma: no cover - MysaDevice
         raise NotImplementedError
+
+    def _reported(self, section: str, field: str) -> Any:  # pragma: no cover - MysaDevice
+        raise NotImplementedError
+
+    @property
+    def active_setpoint(self) -> str:  # pragma: no cover - Readings
+        raise NotImplementedError
+
+    # Setpoint bounds.
+
+    @property
+    def setpoint_step(self) -> float:
+        """The resolution a setpoint is accepted at."""
+        return SETPOINT_STEP
+
+    @property
+    def setpoint_range(self) -> tuple[float, float] | None:
+        """The bounds a setpoint write must fall inside, or None where none is served.
+
+        Follows the mode, as `set_temperature` does (spec 03): the bounds belong to the
+        section being written. An AC unit's `targetCool` carries no lockout pair while
+        its `targetHeat` carries one, and bounding a cool setpoint by the heat section's
+        limits would refuse setpoints the device accepts.
+        """
+        source = self._source(self.active_setpoint)
+        if source is None:
+            return None
+        return self._lockout_range(source.section) or self._declared_range(source)
+
+    def _lockout_range(self, section: str) -> tuple[float, float] | None:
+        """The user-set limit the section reports, where it reports one."""
+        low = _measure(self._reported(section, LOCKOUT[0]))
+        high = _measure(self._reported(section, LOCKOUT[1]))
+        if low is None or high is None:
+            return None
+        return low, high
+
+    def _declared_range(self, source: Source) -> tuple[float, float] | None:
+        """The range the device declares: the capability document, or the codeset."""
+        setting = self._settings.get((source.section, source.field))
+        values = [_measure(value) for value in setting.values or ()] if setting else []
+        numbers = [value for value in values if value is not None]
+        if numbers:
+            return min(numbers), max(numbers)
+        caps = self._record.get("SupportedCaps")
+        span = caps.get("tempRange") if isinstance(caps, dict) else None
+        if isinstance(span, list) and len(span) == 2:
+            low, high = _measure(span[0]), _measure(span[1])
+            if low is not None and high is not None:
+                return low, high
+        return None
 
     # Capabilities.
 
@@ -182,6 +243,13 @@ class Declaration:
         if current is not None and current not in values:
             values.append(current)
         return list(dict.fromkeys(values))
+
+
+def _measure(value: Any) -> float | None:
+    """A number, and not a boolean wearing one."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return None
+    return float(value)
 
 
 #: The semantic field behind each capability's option list.
