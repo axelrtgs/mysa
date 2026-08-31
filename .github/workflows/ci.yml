@@ -47,6 +47,3 @@ jobs:
       - uses: hacs/action@main
         with:
           category: integration
-          # Brand assets live in home-assistant/brands, which this integration is not in
-          # yet. Drop the ignore once an icon is submitted there.
-          ignore: brands

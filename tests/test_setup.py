@@ -73,13 +73,13 @@ async def test_a_baseboard_exposes_its_electrical_readings(hass: HomeAssistant) 
     assert {"current", "voltage", "power", "duty_cycle", "energy"} <= keys
 
 
-async def test_an_ac_unit_exposes_no_power_or_energy(hass: HomeAssistant) -> None:
-    """AC units report no `power` section and no energy (spec 02, spec 05)."""
+async def test_an_ac_unit_exposes_no_electrical_readings(hass: HomeAssistant) -> None:
+    """It reports no `power` section, and the readings it does carry describe its own
+    supply rather than the head unit it drives over infrared (spec 02)."""
     await setup_account(hass, [load(AC_SWING)])
 
     keys = _entities(hass, "device-c2c51c23")
-    assert "voltage" in keys
-    assert {"current", "power", "energy", "duty_cycle"} & keys == set()
+    assert {"current", "voltage", "power", "energy", "duty_cycle", "power_consumed"} & keys == set()
 
 
 async def test_a_bb_v3_reports_no_signal_strength(hass: HomeAssistant) -> None:

@@ -129,6 +129,10 @@ class Declaration:
             found.add(Capability.PROXIMITY)
         if self._controls("active_brightness") or self._controls("idle_brightness"):
             found.add(Capability.BRIGHTNESS)
+        if self._declares("brightness_mode"):
+            found.add(Capability.ADAPTIVE_BRIGHTNESS)
+        if self._controls("thermostatic"):
+            found.add(Capability.THERMOSTATIC)
         if self._offers("temperature_format"):
             found.add(Capability.TEMPERATURE_FORMAT)
         if self._offers("tracking_mode"):
@@ -189,6 +193,19 @@ class Declaration:
         if source.field in LOCKOUT:
             return True
         return self._in_desired(source.section, source.field)
+
+    def _declares(self, name: str) -> bool:
+        """Writable, and the capability document said so.
+
+        Stricter than `_controls`, which accepts the desired half where no document is
+        served. A BB-V1-0 carries `intensityMode` in `desired`, takes the write and reads
+        it back, and has no light sensor to act on it (spec 03).
+        """
+        source = self._source(name)
+        if source is None or not self._has(name):
+            return False
+        setting = self._settings.get((source.section, source.field))
+        return bool(setting and setting.writable)
 
     def _in_desired(self, section: str, field: str) -> bool:
         """A field reported with no desired half is not writable (spec 02).

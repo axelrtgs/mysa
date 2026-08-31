@@ -8,9 +8,11 @@ from homeassistant.components.climate import ClimateEntity
 from homeassistant.components.climate.const import ClimateEntityFeature, HVACMode
 from homeassistant.const import ATTR_TEMPERATURE, UnitOfTemperature
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from pymysa import Capability, MysaDevice
 
+from .const import DOMAIN
 from .coordinator import MysaConfigEntry, MysaCoordinator
 from .entity import MysaEntity
 
@@ -139,6 +141,12 @@ class MysaClimate(MysaEntity, ClimateEntity):
         temperature = kwargs.get(ATTR_TEMPERATURE)
         if temperature is None:
             return
+        if self.hvac_mode is HVACMode.OFF:
+            raise ServiceValidationError(
+                translation_domain=DOMAIN,
+                translation_key="setpoint_while_off",
+                translation_placeholders={"device": self.device.name},
+            )
         await self.write(self.device.set_temperature(float(temperature)))
 
     async def async_set_fan_mode(self, fan_mode: str) -> None:

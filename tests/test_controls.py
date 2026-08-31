@@ -20,6 +20,7 @@ from homeassistant.components.select import (
 )
 from homeassistant.const import (
     ATTR_ENTITY_ID,
+    SERVICE_TURN_OFF,
     SERVICE_TURN_ON,
     STATE_OFF,
     Platform,
@@ -155,7 +156,7 @@ async def test_brightness_writes_the_intensity_it_names(hass: HomeAssistant) -> 
     await hass.services.async_call(
         NUMBER_DOMAIN,
         SERVICE_SET_VALUE,
-        {ATTR_ENTITY_ID: "number.device_42d6d24f_display_brightness_at_rest", ATTR_VALUE: 40},
+        {ATTR_ENTITY_ID: "number.device_42d6d24f_idle_brightness", ATTR_VALUE: 40},
         blocking=True,
     )
     await hass.async_block_till_done()
@@ -182,3 +183,64 @@ async def test_the_hold_is_released_and_never_started(hass: HomeAssistant) -> No
     assert setup.rest.writes == [
         ("device-728d8928", {"source": 3, "schedule": {"holding": False}})
     ]
+
+
+async def test_adaptive_brightness_needs_the_document_and_not_the_desired_half(
+    hass: HomeAssistant,
+) -> None:
+    """A BB-V1-0 carries `intensityMode` in `desired` and takes the write, and has no
+    light sensor to act on it (spec 03)."""
+    await setup_account(hass, [load(BB_V3), load(BB_V1)])
+
+    assert hass.states.get("switch.device_42d6d24f_adaptive_brightness") is not None
+    assert hass.states.get("switch.device_728d8928_adaptive_brightness") is None
+
+
+async def test_adaptive_brightness_writes_the_intensity_mode(hass: HomeAssistant) -> None:
+    setup = await setup_account(hass, [load(BB_V3)])
+    hasten(setup)
+
+    await hass.services.async_call(
+        Platform.SWITCH,
+        SERVICE_TURN_OFF,
+        {ATTR_ENTITY_ID: "switch.device_42d6d24f_adaptive_brightness"},
+        blocking=True,
+    )
+    await hass.async_block_till_done()
+
+    assert setup.rest.writes == [
+        ("device-42d6d24f", {"source": 3, "physicalInterface": {"intensityMode": 0}})
+    ]
+
+
+async def test_climate_plus_is_an_ac_control(hass: HomeAssistant) -> None:
+    """`modes.isThermostatic` is Climate+ in the app (spec 02)."""
+    setup = await setup_account(hass, [load(AC_PLAIN), load(BB_V3)])
+    hasten(setup)
+
+    assert hass.states.get("switch.device_1c4d5808_climate") is not None
+    await hass.services.async_call(
+        Platform.SWITCH,
+        SERVICE_TURN_OFF,
+        {ATTR_ENTITY_ID: "switch.device_1c4d5808_climate"},
+        blocking=True,
+    )
+    await hass.async_block_till_done()
+
+    assert setup.rest.writes == [
+        ("device-1c4d5808", {"source": 3, "modes": {"isThermostatic": 0}})
+    ]
+
+
+async def test_the_hold_button_goes_away_with_the_schedule(hass: HomeAssistant) -> None:
+    """Deleting the schedule removes the section, and with it the hold (spec 08)."""
+    setup = await setup_account(hass, [load(BB_V1)])
+    assert hass.states.get("button.device_728d8928_release_schedule_hold").state != "unavailable"
+
+    del setup.rest.samples["device-728d8928"].state["schedule"]
+    await setup.account.refresh()
+    setup.entry.runtime_data.async_update_listeners()
+    await hass.async_block_till_done()
+
+    assert hass.states.get("button.device_728d8928_release_schedule_hold").state == "unavailable"
+    assert hass.states.get("sensor.device_728d8928_next_schedule_event").state == "unavailable"

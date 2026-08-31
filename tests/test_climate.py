@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import pytest
 from homeassistant.components.climate import (
     ATTR_FAN_MODE,
     ATTR_HVAC_MODE,
@@ -18,6 +19,7 @@ from homeassistant.components.climate import (
 )
 from homeassistant.const import ATTR_ENTITY_ID, ATTR_TEMPERATURE
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ServiceValidationError
 
 from .conftest import AC_PLAIN, AC_SWING, BB_V1, BB_V3, Sample, hasten, load, setup_account
 
@@ -158,7 +160,7 @@ async def test_a_setpoint_write_goes_to_the_section_the_mode_selects(
 
 
 async def test_a_baseboard_setpoint_goes_to_the_heat_section(hass: HomeAssistant) -> None:
-    setup = await setup_account(hass, [load(BB_V3)])
+    setup = await setup_account(hass, [_in_mode(load(BB_V3), 4)])
     hasten(setup)
 
     await hass.services.async_call(
@@ -214,3 +216,20 @@ async def test_fan_and_swing_are_written_by_name_and_land_as_numbers(
         ("device-c2c51c23", {"source": 3, "modes": {"fan_mode": 3}}),
         ("device-c2c51c23", {"source": 3, "modes": {"verticalSwingState": 1}}),
     ]
+
+
+async def test_a_setpoint_is_refused_while_the_thermostat_is_off(
+    hass: HomeAssistant,
+) -> None:
+    """The device does not act on it and the app will not let you set one (spec 03)."""
+    setup = await setup_account(hass, [load(BB_V3)])
+
+    with pytest.raises(ServiceValidationError):
+        await hass.services.async_call(
+            CLIMATE_DOMAIN,
+            SERVICE_SET_TEMPERATURE,
+            {ATTR_ENTITY_ID: BASEBOARD, ATTR_TEMPERATURE: 21},
+            blocking=True,
+        )
+
+    assert setup.rest.writes == []

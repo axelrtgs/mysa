@@ -16,9 +16,16 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from pymysa import TransportError
 
-from .conftest import BB_V3, hasten, load, setup_account
+from .conftest import BB_V3, Sample, hasten, load, setup_account
 
 BASEBOARD = "climate.device_42d6d24f"
+
+
+def heating() -> Sample:
+    """The capture holds mode 0, and a setpoint written while off is refused."""
+    sample = load(BB_V3)
+    sample.state["modes"]["reported"]["mode"] = 4
+    return sample
 
 VALIDATION = TransportError(
     '/state/device-42d6d24f/update returned 400: {"statusCode": 400, '
@@ -44,7 +51,7 @@ async def _set_temperature(hass: HomeAssistant, value: float) -> None:
 async def test_the_written_value_shows_before_the_next_poll(hass: HomeAssistant) -> None:
     """The setter returns once the backend accepts it, with the value already readable
     from the device (spec 09)."""
-    setup = await setup_account(hass, [load(BB_V3)])
+    setup = await setup_account(hass, [heating()])
     hasten(setup)
     setup.rest.applies = False
 
@@ -60,7 +67,7 @@ async def test_a_value_the_device_declares_invalid_is_refused_without_a_request(
     """A BB-V3-0 declares its setpoint at half degrees, and the backend accepts anything
     else with 200 and never applies it (spec 04). Refusing locally is what tells the
     difference."""
-    setup = await setup_account(hass, [load(BB_V3)])
+    setup = await setup_account(hass, [heating()])
     hasten(setup)
 
     with pytest.raises(ServiceValidationError):
@@ -73,7 +80,7 @@ async def test_a_value_the_device_declares_invalid_is_refused_without_a_request(
 async def test_a_schema_refusal_reaches_the_user_as_a_bad_value(
     hass: HomeAssistant,
 ) -> None:
-    setup = await setup_account(hass, [load(BB_V3)])
+    setup = await setup_account(hass, [heating()])
     hasten(setup)
     setup.rest.refusal = VALIDATION
 
@@ -88,7 +95,7 @@ async def test_a_capability_refusal_reaches_the_user_as_a_missing_feature(
 ) -> None:
     """The backend stating the device does not have the feature is a fact about the
     device, not a malformed request (spec 03)."""
-    setup = await setup_account(hass, [load(BB_V3)])
+    setup = await setup_account(hass, [heating()])
     hasten(setup)
     setup.rest.refusal = CAPABILITY
 
@@ -99,7 +106,7 @@ async def test_a_capability_refusal_reaches_the_user_as_a_missing_feature(
 
 
 async def test_a_transport_failure_is_not_a_refusal(hass: HomeAssistant) -> None:
-    setup = await setup_account(hass, [load(BB_V3)])
+    setup = await setup_account(hass, [heating()])
     hasten(setup)
     setup.rest.refusal = TransportError("update request failed: connection reset")
 
@@ -115,7 +122,7 @@ async def test_a_write_that_is_accepted_and_never_applied_snaps_back(
 ) -> None:
     """The confirmation drops the pending value and calls `on_write_failed`; the
     integration puts every entity back to what the device reports (spec 06)."""
-    setup = await setup_account(hass, [load(BB_V3)])
+    setup = await setup_account(hass, [heating()])
     hasten(setup)
     setup.rest.applies = False
 

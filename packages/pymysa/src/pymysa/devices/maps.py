@@ -75,10 +75,15 @@ BB_V3 = _BASEBOARD | _sources(
     early_on=("cloudFeatures", "cloudEarlyOn", "enabled"),
 )
 
-#: No `power` section, no serial, no energy.
-AC_V1 = SHARED | _sources(
+#: No `power` section, no serial, no energy. `voltage` and `powerConsumed` are reported
+#: and deliberately unmapped: the unit is an infrared blaster and measures nothing about
+#: the head unit it drives (spec 02).
+AC_V1 = _sources(**{
+    name: (source.section, source.field)
+    for name, source in SHARED.items()
+    if name != "power_consumed"
+}) | _sources(
     signal_strength=(READING, "rssi"),
-    voltage=(READING, "voltage"),
     target_temperature_cool=("targetCool", "setpoint"),
     target_temperature_auto=("targetAuto", "setpoint"),
     fan_speed=("modes", "fan_mode"),

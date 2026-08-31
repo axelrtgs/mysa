@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
-from homeassistant.components.switch import SwitchEntity
+from collections.abc import Callable, Coroutine
+from dataclasses import dataclass
+from typing import Any
+
+from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
@@ -12,6 +16,47 @@ from .coordinator import MysaConfigEntry, MysaCoordinator
 from .entity import MysaEntity
 
 
+@dataclass(frozen=True, kw_only=True)
+class MysaSwitchDescription(SwitchEntityDescription):
+    """A setting, the capability that declares it, and how to move it."""
+
+    capability: Capability
+    value_fn: Callable[[MysaDevice], bool | None]
+    set_fn: Callable[[MysaDevice, bool], Coroutine[Any, Any, None]]
+
+
+SWITCHES: tuple[MysaSwitchDescription, ...] = (
+    # A BB-V1-0 reports `wakeOnApproach` and declares it read-only, so it has no switch.
+    MysaSwitchDescription(
+        key="proximity",
+        translation_key="proximity",
+        entity_category=EntityCategory.CONFIG,
+        capability=Capability.PROXIMITY,
+        value_fn=lambda device: device.proximity,
+        set_fn=lambda device, on: device.set_proximity(on),
+    ),
+    # None where the device holds one of the two intensity modes nothing names (spec 02).
+    MysaSwitchDescription(
+        key="adaptive_brightness",
+        translation_key="adaptive_brightness",
+        entity_category=EntityCategory.CONFIG,
+        capability=Capability.ADAPTIVE_BRIGHTNESS,
+        value_fn=lambda device: (
+            None if device.brightness_mode is None else device.brightness_mode == "adaptive"
+        ),
+        set_fn=lambda device, on: device.set_adaptive_brightness(on),
+    ),
+    MysaSwitchDescription(
+        key="thermostatic",
+        translation_key="thermostatic",
+        entity_category=EntityCategory.CONFIG,
+        capability=Capability.THERMOSTATIC,
+        value_fn=lambda device: device.thermostatic,
+        set_fn=lambda device, on: device.set_thermostatic(on),
+    ),
+)
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: MysaConfigEntry,
@@ -19,31 +64,33 @@ async def async_setup_entry(
 ) -> None:
     coordinator = entry.runtime_data
     async_add_entities(
-        MysaProximity(coordinator, device)
+        MysaSwitch(coordinator, device, description)
         for device in coordinator.account.devices.values()
-        if device.supports(Capability.PROXIMITY)
+        for description in SWITCHES
+        if device.supports(description.capability)
     )
 
 
-class MysaProximity(MysaEntity, SwitchEntity):
-    """Whether the display wakes when someone approaches.
+class MysaSwitch(MysaEntity, SwitchEntity):
+    """One setting that is on or off."""
 
-    A BB-V1-0 reports the field and declares it read-only, so it has no switch: a field
-    being readable is not a control (spec 02).
-    """
+    entity_description: MysaSwitchDescription
 
-    _attr_entity_category = EntityCategory.CONFIG
-    _attr_translation_key = "proximity"
-
-    def __init__(self, coordinator: MysaCoordinator, device: MysaDevice) -> None:
-        super().__init__(coordinator, device, "proximity")
+    def __init__(
+        self,
+        coordinator: MysaCoordinator,
+        device: MysaDevice,
+        description: MysaSwitchDescription,
+    ) -> None:
+        super().__init__(coordinator, device, description.key)
+        self.entity_description = description
 
     @property
     def is_on(self) -> bool | None:
-        return self.device.proximity
+        return self.entity_description.value_fn(self.device)
 
-    async def async_turn_on(self, **kwargs: object) -> None:
-        await self.write(self.device.set_proximity(True))
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        await self.write(self.entity_description.set_fn(self.device, True))
 
-    async def async_turn_off(self, **kwargs: object) -> None:
-        await self.write(self.device.set_proximity(False))
+    async def async_turn_off(self, **kwargs: Any) -> None:
+        await self.write(self.entity_description.set_fn(self.device, False))

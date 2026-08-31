@@ -445,8 +445,6 @@ its telemetry reading carries no `rssi` — and additionally:
 | `raw_temperature` | `latestTelemetry.reading.rawTemperature` |
 | `humidity` | `latestTelemetry.reading.humidity` |
 | `signal_strength` | `latestTelemetry.reading.rssi` |
-| `voltage` | `latestTelemetry.reading.voltage` |
-| `power_consumed` | `latestTelemetry.reading.powerConsumed` |
 | `on_time` | `latestTelemetry.reading.onTime` |
 | `target_temperature` | `targetHeat.reported.setpoint` |
 | `target_temperature_cool` | `targetCool.reported.setpoint` |
@@ -464,9 +462,11 @@ its telemetry reading carries no `rssi` — and additionally:
 | `firmware` | `identity.reported.fw` |
 | `family` | `identity.reported.family` |
 
-AC units report no `power` section, no `serial`, and no `energy`. Electrical values are
-what the telemetry reading carries: `voltage`, `instantLoad`, `maxCurrent`.
-`unit_power` is reported and not writable (spec 03).
+AC units report no `power` section, no `serial`, and no `energy`. The telemetry reading
+carries `voltage`, `instantLoad` and `maxCurrent`, and none of them is mapped: the unit
+is an infrared blaster and measures nothing about the head unit it drives, so its 240 V
+describes the controller's own supply and its load is always zero. `unit_power` is
+reported and not writable (spec 03).
 
 Only one unit of the two carries `modes.horizontalSwingState` and `acConfig` at all;
 the field maps name every field the model has been seen to report, and a device that does

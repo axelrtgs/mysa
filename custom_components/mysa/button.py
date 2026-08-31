@@ -39,6 +39,11 @@ class MysaReleaseHold(MysaEntity, ButtonEntity):
     def __init__(self, coordinator: MysaCoordinator, device: MysaDevice) -> None:
         super().__init__(coordinator, device, "release_hold")
 
+    @property
+    def available(self) -> bool:
+        """Deleting the schedule removes the section, and with it the hold."""
+        return super().available and self.device.schedule is not None
+
     async def async_press(self) -> None:
         hold = self.device.schedule
         if hold is None:

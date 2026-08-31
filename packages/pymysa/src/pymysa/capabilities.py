@@ -165,10 +165,12 @@ class Capability(Enum):
     LOCK = "lock"
     PROXIMITY = "proximity"
     BRIGHTNESS = "brightness"
+    ADAPTIVE_BRIGHTNESS = "adaptive_brightness"
     TEMPERATURE_FORMAT = "temperature_format"
     SENSOR_MODE = "sensor_mode"
     SETPOINT_LIMITS = "setpoint_limits"
     SCHEDULE = "schedule"
+    THERMOSTATIC = "thermostatic"
 
 
 #: Codeset control name to the capability it declares.

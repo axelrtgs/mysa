@@ -63,8 +63,8 @@
       "release_hold": { "name": "Release schedule hold" }
     },
     "number": {
-      "active_brightness": { "name": "Display brightness in use" },
-      "idle_brightness": { "name": "Display brightness at rest" },
+      "active_brightness": { "name": "Active brightness" },
+      "idle_brightness": { "name": "Idle brightness" },
       "min_setpoint": { "name": "Setpoint minimum" },
       "max_setpoint": { "name": "Setpoint maximum" }
     },
@@ -86,7 +86,9 @@
       "schedule_next_event": { "name": "Next schedule event" }
     },
     "switch": {
-      "proximity": { "name": "Wake on approach" }
+      "proximity": { "name": "Wake on approach" },
+      "adaptive_brightness": { "name": "Adaptive brightness" },
+      "thermostatic": { "name": "Climate+" }
     }
   },
   "exceptions": {
@@ -98,6 +100,9 @@
     },
     "write_failed": {
       "message": "Writing to {device} failed: {reason}"
+    },
+    "setpoint_while_off": {
+      "message": "{device} is off. A setpoint written while a thermostat is off is not applied - turn it on first."
     },
     "no_schedule": {
       "message": "{device} has no schedule to release."

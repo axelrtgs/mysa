@@ -64,7 +64,6 @@ class MysaFirmware(MysaEntity, BinarySensorEntity):
 
     _attr_device_class = BinarySensorDeviceClass.UPDATE
     _attr_entity_category = EntityCategory.DIAGNOSTIC
-    _attr_entity_registry_enabled_default = False
     _attr_translation_key = "firmware_update"
 
     def __init__(self, coordinator: MysaCoordinator, device: MysaDevice) -> None:

@@ -46,7 +46,7 @@ creates no entity, because a control with one option is not a control (spec 09).
 | `binary_sensor` | firmware update available | `refresh_firmware()` read an answer |
 | `select` | keypad lock | `Capability.LOCK` |
 | `select` | temperature format | `Capability.TEMPERATURE_FORMAT` |
-| `switch` | proximity wake | `Capability.PROXIMITY` |
+| `switch` | proximity wake, adaptive brightness, Climate+ | matching capability |
 | `number` | active brightness, idle brightness | `Capability.BRIGHTNESS` |
 | `number` | setpoint minimum, setpoint maximum | `Capability.SETPOINT_LIMITS` |
 | `button` | release schedule hold | the device carries a `schedule` section |
@@ -132,7 +132,7 @@ Home Assistant applies its own rate to the energy the integration supplies.
 | key | source | class |
 |---|---|---|
 | `connected` | `device.available` | connectivity |
-| `firmware_update` | `device.firmware_update.available` | update, diagnostic, disabled by default |
+| `firmware_update` | `device.firmware_update.available` | update, diagnostic |
 
 The firmware entity reports and does not install: no install path has been observed on
 any surface this project reads, so an `update` entity's only button would do nothing.
@@ -144,6 +144,8 @@ any surface this project reads, so an `update` entity's only button would do not
 | `select` | `lock` | `device.lock` | `set_lock(option)` |
 | `select` | `temperature_format` | `device.temperature_format` | `set_temperature_format(option)` |
 | `switch` | `proximity` | `device.proximity` | `set_proximity(bool)` |
+| `switch` | `adaptive_brightness` | `device.brightness_mode` | `set_adaptive_brightness(bool)` |
+| `switch` | `thermostatic` | `device.thermostatic` | `set_thermostatic(bool)` |
 | `number` | `active_brightness` | `device.active_brightness` | `set_brightness(active=...)` |
 | `number` | `idle_brightness` | `device.idle_brightness` | `set_brightness(idle=...)` |
 | `number` | `min_setpoint` | `device.min_setpoint` | `set_setpoint_limits(low, high)` |
@@ -157,6 +159,10 @@ Brightness is 0-100. The setpoint limits are whole degrees bounded by `setpoint_
 and each writes the pair, because `set_setpoint_limits` takes both: the entity being
 moved supplies its new value and the other supplies its current one.
 
+Adaptive brightness is the one switch gated on the capability document rather than on
+the device reporting a writable field: a BB-V1-0 carries `intensityMode` in `desired`,
+takes the write and reads it back, and has no light sensor (spec 03).
+
 ## The schedule hold
 
 A hold is released and not created: writing `holding: false` ends one, and nothing
@@ -168,6 +174,10 @@ switch would offer a control whose other half cannot work.
 
 Schedule definitions are not exposed. Their shape is not established: every capture's day
 lists are empty (spec 08).
+
+Deleting the schedule removes the section, so both entities go unavailable rather than
+disappearing: a device that had a schedule can have one again, and an entity that comes
+and goes takes its history with it.
 
 ## Writes
 
@@ -182,6 +192,10 @@ account, and the callback updates every entity on the coordinator, so the value 
 snaps back to what the device actually holds. It is logged as a warning naming the device
 and the field, because a control that silently does nothing otherwise looks like one that
 works.
+
+A setpoint written while the thermostat is off is refused before the request. The field
+moves and the device does nothing with it, which is the same trap spec 03 describes; the
+app will not let you set one either.
 
 | refusal | surfaces as |
 |---|---|

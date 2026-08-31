@@ -40,6 +40,8 @@ class MysaSensorDescription(SensorEntityDescription):
     value_fn: Callable[[MysaDevice, Home | None], Reading]
     #: Whether the device has this at all. Defaults to reporting a value (spec 06).
     exists_fn: Callable[[MysaDevice, Home | None], bool] | None = None
+    #: Whether it still has it. Defaults to existing being enough.
+    available_fn: Callable[[MysaDevice], bool] | None = None
 
 
 def _next_event(device: MysaDevice) -> datetime | None:
@@ -138,6 +140,7 @@ SENSORS: tuple[MysaSensorDescription, ...] = (
         value_fn=lambda device, _: _next_event(device),
         # A hold with no end reports no timestamp and is still a hold (spec 08).
         exists_fn=lambda device, _: device.schedule is not None,
+        available_fn=lambda device: device.schedule is not None,
     ),
 )
 
@@ -177,6 +180,11 @@ class MysaSensor(MysaEntity, SensorEntity):
     ) -> None:
         super().__init__(coordinator, device, description.key)
         self.entity_description = description
+
+    @property
+    def available(self) -> bool:
+        follows = self.entity_description.available_fn
+        return super().available and (follows is None or follows(self.device))
 
     @property
     def native_value(self) -> Reading:

@@ -246,3 +246,52 @@ async def test_setting_the_temperature_writes_the_section_the_mode_selects():
     await device.set_temperature(22, wait=True)
 
     assert rest.writes == [("targetCool", {"setpoint": 22})]
+
+
+ADAPTIVE = {
+    "features": {
+        "interface": {
+            "adaptiveBrightness": {
+                "intensityMode": {
+                    "userControllable": True, "type": "integer", "validValues": [0, 1, 2, 3]
+                }
+            }
+        }
+    }
+}
+
+
+def test_adaptive_brightness_needs_the_document_not_the_desired_half():
+    """A BB-V1-0 carries `intensityMode` in `desired`, takes the write and reads it
+    back, and has no light sensor to act on it (spec 03)."""
+    undeclared = bb_v3()
+    declared = _device(
+        {"Id": "9070", "Name": "Living Room", "Model": "BB-V3-0"}, BB_V3_DOC, ADAPTIVE
+    )
+
+    assert Capability.ADAPTIVE_BRIGHTNESS not in undeclared.capabilities
+    assert Capability.ADAPTIVE_BRIGHTNESS in declared.capabilities
+
+
+def test_climate_plus_is_declared_where_the_unit_holds_a_desired_value_for_it():
+    """`modes.isThermostatic` is Climate+ in the app, and AC units alone report it."""
+    document = {
+        **AC_DOC,
+        "modes": {
+            "desired": {"mode": 3, "isThermostatic": 1},
+            "reported": {"mode": 3, "isThermostatic": 1},
+        },
+    }
+    unit = _device({"Id": "a4e5", "Model": "AC-V1-0"}, document)
+
+    assert Capability.THERMOSTATIC in unit.capabilities
+    assert Capability.THERMOSTATIC not in ac().capabilities
+    assert Capability.THERMOSTATIC not in bb_v3().capabilities
+
+
+def test_an_ac_unit_maps_no_electrical_reading():
+    """It measures its own supply, not the head unit it drives (spec 02)."""
+    device = ac()
+
+    assert device.voltage is None
+    assert device.power_consumed is None

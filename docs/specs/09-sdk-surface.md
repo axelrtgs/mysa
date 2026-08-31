@@ -146,13 +146,19 @@ an AC unit declares no step and is written at the same resolution. `[observed]`
 ```python
 class Capability(Enum):
     HEAT, COOL, FAN, VERTICAL_SWING, HORIZONTAL_SWING,
-    CURRENT, ENERGY, LOCK, PROXIMITY, BRIGHTNESS, TEMPERATURE_FORMAT,
-    SENSOR_MODE, SETPOINT_LIMITS, SCHEDULE
+    CURRENT, ENERGY, LOCK, PROXIMITY, BRIGHTNESS, ADAPTIVE_BRIGHTNESS,
+    TEMPERATURE_FORMAT, SENSOR_MODE, SETPOINT_LIMITS, SCHEDULE, THERMOSTATIC
 ```
 
 A capability is declared from three sources in order (spec 04): the capability document
 where the device serves one, the codeset declaration for AC units, and otherwise the
 sections and fields present in the state document.
+
+`ADAPTIVE_BRIGHTNESS` is the one capability that requires the capability document to
+declare its field, rather than accepting the state document as evidence. Every other
+control falls back to the desired half where no document is served, which is right for a
+device that serves none - but a BB-V1-0 carries `intensityMode` in `desired`, takes the
+write and reads it back, and has no light sensor to act on it (spec 03).
 
 A capability whose option set resolves fewer than two values is not declared: a control
 with one option is not a control. A BB-V1-0 declares `trackingSensor` writable with
@@ -215,6 +221,8 @@ it, which is indistinguishable at the transport from a device that simply declin
 | `set_mode(name)` | `modes.mode` |
 | `set_fan_speed(name)`, `set_vertical_swing(name)`, `set_horizontal_swing(name)` | `modes` |
 | `set_lock(name)`, `set_proximity(bool)`, `set_brightness(active, idle)` | `physicalInterface` |
+| `set_adaptive_brightness(bool)` | `physicalInterface.intensityMode` |
+| `set_thermostatic(bool)` | `modes.isThermostatic`, which the app calls Climate+ |
 | `set_temperature_format(name)` | `physicalInterface.format` |
 | `set_setpoint_limits(low, high)` | the active setpoint section |
 

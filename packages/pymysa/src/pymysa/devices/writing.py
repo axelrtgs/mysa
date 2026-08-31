@@ -93,6 +93,14 @@ class Writing:
     async def set_proximity(self, on: bool) -> None:
         await self._set("proximity", 1 if on else 0)
 
+    async def set_adaptive_brightness(self, on: bool) -> None:
+        """Whether the display follows the room's light. BB-V2 and later (spec 02)."""
+        await self._set("brightness_mode", 1 if on else 0)
+
+    async def set_thermostatic(self, on: bool) -> None:
+        """Climate+ in the app: follow a setpoint rather than the unit's own program."""
+        await self._set("thermostatic", 1 if on else 0)
+
     async def set_temperature_format(self, unit: str) -> None:
         await self._set("temperature_format", unit)
 
