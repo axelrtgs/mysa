@@ -1,0 +1,141 @@
+{
+  "device": "device-1c4d5808",
+  "model": "AC-V1-0",
+  "passed": false,
+  "results": [
+    {
+      "parameter": "targetHeat.setpoint",
+      "original": 21,
+      "written": 22,
+      "status": "not restored",
+      "detail": "still set to 22"
+    },
+    {
+      "parameter": "targetCool.setpoint",
+      "original": 21,
+      "written": 22,
+      "status": "not restored",
+      "detail": "still set to 22"
+    },
+    {
+      "parameter": "targetAuto.setpoint",
+      "original": 21,
+      "written": 22,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "modes.fan_mode",
+      "original": 0,
+      "written": 1,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "modes.fan_mode",
+      "original": 0,
+      "written": 2,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "modes.fan_mode",
+      "original": 0,
+      "written": 3,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "modes.verticalSwingState",
+      "original": 2,
+      "written": 1,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "modes.isThermostatic",
+      "original": 1,
+      "written": 0,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "physicalInterface.lockout",
+      "original": 0,
+      "written": 1,
+      "status": "not applied",
+      "detail": "declined in mode 0, 1, 4, 7, 8"
+    },
+    {
+      "parameter": "physicalInterface.format",
+      "original": "C",
+      "written": "F",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "physicalInterface.activeIntensity",
+      "original": 100,
+      "written": 90,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "physicalInterface.idleIntensity",
+      "original": 50,
+      "written": 60,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "schedule.holding",
+      "original": true,
+      "written": false,
+      "status": "not applied",
+      "detail": "declined in mode 0, 1, 4, 7, 8"
+    },
+    {
+      "parameter": "modes.unitPower",
+      "original": 2,
+      "written": 1,
+      "status": "not applied",
+      "detail": "declined in mode 0, 1, 4, 7, 8"
+    },
+    {
+      "parameter": "modes.mode",
+      "original": 3,
+      "written": 0,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "modes.mode",
+      "original": 3,
+      "written": 1,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "modes.mode",
+      "original": 3,
+      "written": 4,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "modes.mode",
+      "original": 3,
+      "written": 7,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "modes.mode",
+      "original": 3,
+      "written": 8,
+      "status": "passed",
+      "detail": ""
+    }
+  ],
+  "review": []
+}

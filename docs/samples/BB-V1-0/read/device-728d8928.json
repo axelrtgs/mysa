@@ -1,0 +1,499 @@
+{
+  "device": {
+    "AllowedUsers": "<redacted>",
+    "Animation": "off",
+    "AutoBrightness": false,
+    "Brightness": {
+      "a_b": 0,
+      "a_br": 85,
+      "i_dr": 35,
+      "i_br": 35,
+      "a_dr": 85
+    },
+    "ButtonAVE": 16,
+    "ButtonDI": 8,
+    "ButtonLowPower": 0,
+    "ButtonPolling": 175,
+    "ButtonRepeatDelay": 20,
+    "ButtonRepeatStart": 44,
+    "ButtonState": "Unlocked",
+    "ButtonThreshold": 10,
+    "DutyCycleOpt": 7,
+    "Format": "celsius",
+    "HeaterType": "fan forced",
+    "Home": "<redacted>",
+    "Id": "device-728d8928",
+    "LastPaired": 1698618390,
+    "MaxBrightness": 85,
+    "MaxCurrent": "5.813752",
+    "MaxSetpoint": 24,
+    "MinBrightness": 35,
+    "MinSetpoint": 5,
+    "Mode": {
+      "Id": 0,
+      "LastUpdated": 1788161475401
+    },
+    "Model": "BB-V1-0",
+    "Name": "<name>",
+    "Owner": "<redacted>",
+    "ProximityMode": true,
+    "Schedule": "id-ee36dbe1",
+    "TimeZone": "America/Toronto",
+    "Voltage": 240,
+    "ecoMode": 1,
+    "schedGlobalOffset": 1
+  },
+  "state": {
+    "data": {
+      "latestTelemetry": {
+        "isConnected": true,
+        "lastConnected": 1788162598,
+        "reading": {
+          "deviceId": "device-728d8928",
+          "timestamp": 1788162598,
+          "rawTemperature": 24.2,
+          "roomTemperature": 23.4,
+          "humidity": 49,
+          "heatSetpoint": 20,
+          "coolSetpoint": 20,
+          "onTime": 0,
+          "coreTemperature": 23.1,
+          "freeHeap": 126320,
+          "rssi": -58,
+          "mode": 1,
+          "voltage": 240,
+          "maxCurrent": 5.813752,
+          "powerConsumed": 0,
+          "instantLoad": 0,
+          "dutyCycle": 0,
+          "timestampEstimated": true
+        }
+      },
+      "targetHeat": {
+        "desired": {
+          "timestamp": 1788162741,
+          "setpoint": 20
+        },
+        "reported": {
+          "timestamp": 1788162741,
+          "setpoint": 20,
+          "lockoutMax": 24,
+          "lockoutMin": 5
+        }
+      },
+      "modes": {
+        "desired": {
+          "timestamp": 1788161475,
+          "mode": 0
+        },
+        "reported": {
+          "timestamp": 1788162598,
+          "mode": 0
+        }
+      },
+      "identity": {
+        "reported": {
+          "timestamp": 1788152706,
+          "family": "BB",
+          "model": "BB-V1-0",
+          "fw": "3.17.3.1"
+        }
+      },
+      "physicalInterface": {
+        "desired": {
+          "timestamp": 1788161289,
+          "activeIntensity": 100,
+          "idleIntensity": 35,
+          "wakeOnApproach": 1,
+          "lockout": 0,
+          "format": "C",
+          "intensityMode": 0
+        },
+        "reported": {
+          "timestamp": 1788161475,
+          "activeIntensity": 85,
+          "idleIntensity": 35,
+          "wakeOnApproach": 1,
+          "lockout": 0,
+          "format": "C",
+          "intensityMode": 0
+        }
+      },
+      "diagnostics": {
+        "reported": {
+          "timestamp": 1788162598,
+          "freeHeap": 126320
+        }
+      },
+      "power": {
+        "reported": {
+          "timestamp": 1788162741,
+          "voltage": 240,
+          "current": 0,
+          "wattage": 0,
+          "dutyCycle": 0
+        }
+      },
+      "bbConfig": {
+        "desired": {
+          "timestamp": 1788160207,
+          "controlType": 7
+        },
+        "reported": {
+          "timestamp": 1788160208,
+          "controlType": 7
+        }
+      },
+      "schedule": {
+        "resolved": true,
+        "holding": true
+      },
+      "drState": {
+        "inEvent": false,
+        "state": "none"
+      }
+    }
+  },
+  "capabilities": {
+    "version": "1.0",
+    "hardware": {
+      "sensors": {
+        "internalTemperatureSensor": true,
+        "externalTemperatureProbeConnector": false,
+        "humiditySensor": true,
+        "proximitySensor": false,
+        "ambientLightSensor": false
+      },
+      "communication": {
+        "bluetoothModule": false,
+        "wifiModule": true,
+        "nfcChip": false
+      }
+    },
+    "features": {
+      "climateControl": {
+        "mode": {
+          "userControllable": true,
+          "type": "enum",
+          "validValues": [
+            "off",
+            "heat"
+          ]
+        },
+        "heat": {
+          "stages": 1,
+          "setpoint": {
+            "userControllable": true,
+            "type": "float",
+            "validValues": [
+              5,
+              5.5,
+              6,
+              6.5,
+              7,
+              7.5,
+              8,
+              8.5,
+              9,
+              9.5,
+              10,
+              10.5,
+              11,
+              11.5,
+              12,
+              12.5,
+              13,
+              13.5,
+              14,
+              14.5,
+              15,
+              15.5,
+              16,
+              16.5,
+              17,
+              17.5,
+              18,
+              18.5,
+              19,
+              19.5,
+              20,
+              20.5,
+              21,
+              21.5,
+              22,
+              22.5,
+              23,
+              23.5,
+              24,
+              24.5,
+              25,
+              25.5,
+              26,
+              26.5,
+              27,
+              27.5,
+              28,
+              28.5,
+              29,
+              29.5,
+              30
+            ]
+          }
+        },
+        "advancedConfig": {
+          "baseboardHeating": {
+            "controlType": {
+              "userControllable": true,
+              "type": "integer",
+              "validValues": [
+                0,
+                4,
+                5,
+                6,
+                7
+              ]
+            }
+          }
+        }
+      },
+      "sensing": {
+        "temperature": {
+          "sensors": {
+            "internal": true,
+            "externalProbe": false,
+            "remote": false
+          },
+          "trackingSensor": {
+            "userControllable": true,
+            "type": "enum",
+            "validValues": [
+              "internal"
+            ]
+          }
+        },
+        "humidity": true
+      },
+      "interface": {
+        "wakeOnApproach": {
+          "userControllable": false,
+          "type": "boolean"
+        },
+        "lockout": {
+          "userControllable": true,
+          "type": "integer",
+          "validValues": [
+            0,
+            3
+          ]
+        },
+        "brightness": {
+          "userControllable": true,
+          "type": "integer"
+        },
+        "unit": {
+          "userControllable": true,
+          "type": "enum",
+          "validValues": [
+            "C",
+            "F"
+          ]
+        }
+      },
+      "connectivity": {
+        "bluetooth": false,
+        "wifi": true,
+        "nfc": false,
+        "matter": false,
+        "homekit": true,
+        "googleHome": true,
+        "amazonAlexa": true
+      },
+      "smart": {
+        "energyReporting": true,
+        "scheduling": true,
+        "zoning": true,
+        "geofence": true,
+        "earlyOn": true,
+        "cloudEarlyOn": false,
+        "shortcuts": true,
+        "savedSchedules": true,
+        "wholeHomeEnergy": true,
+        "smartAlerts": {
+          "temperatureAlerts": {
+            "high": {
+              "enabled": {
+                "userControllable": true,
+                "type": "boolean"
+              },
+              "threshold": {
+                "userControllable": true,
+                "type": "float"
+              }
+            },
+            "low": {
+              "enabled": {
+                "userControllable": true,
+                "type": "boolean"
+              },
+              "threshold": {
+                "userControllable": true,
+                "type": "float"
+              }
+            }
+          },
+          "humidityAlerts": {
+            "high": {
+              "enabled": {
+                "userControllable": true,
+                "type": "boolean"
+              },
+              "threshold": {
+                "userControllable": true,
+                "type": "float"
+              }
+            },
+            "low": {
+              "enabled": {
+                "userControllable": true,
+                "type": "boolean"
+              },
+              "threshold": {
+                "userControllable": true,
+                "type": "float"
+              }
+            }
+          }
+        }
+      }
+    },
+    "system": {
+      "deviceId": "device-728d8928",
+      "model": "BB-V1-0",
+      "firmwareVersion": "3.17.3.1"
+    }
+  },
+  "update_available": {
+    "update": false,
+    "installedVersion": "3.17.3.1",
+    "allowedVersion": "3.17.3.1"
+  },
+  "sections": {
+    "latestTelemetry": [
+      "isConnected",
+      "lastConnected",
+      "reading"
+    ],
+    "latestTelemetry.reading": [
+      "coolSetpoint",
+      "coreTemperature",
+      "deviceId",
+      "dutyCycle",
+      "freeHeap",
+      "heatSetpoint",
+      "humidity",
+      "instantLoad",
+      "maxCurrent",
+      "mode",
+      "onTime",
+      "powerConsumed",
+      "rawTemperature",
+      "roomTemperature",
+      "rssi",
+      "timestamp",
+      "timestampEstimated",
+      "voltage"
+    ],
+    "targetHeat": [
+      "lockoutMax",
+      "lockoutMin",
+      "setpoint",
+      "timestamp"
+    ],
+    "modes": [
+      "mode",
+      "timestamp"
+    ],
+    "identity": [
+      "family",
+      "fw",
+      "model",
+      "timestamp"
+    ],
+    "physicalInterface": [
+      "activeIntensity",
+      "format",
+      "idleIntensity",
+      "intensityMode",
+      "lockout",
+      "timestamp",
+      "wakeOnApproach"
+    ],
+    "diagnostics": [
+      "freeHeap",
+      "timestamp"
+    ],
+    "power": [
+      "current",
+      "dutyCycle",
+      "timestamp",
+      "voltage",
+      "wattage"
+    ],
+    "bbConfig": [
+      "controlType",
+      "timestamp"
+    ],
+    "schedule": [
+      "holding",
+      "resolved"
+    ],
+    "drState": [
+      "inEvent",
+      "state"
+    ]
+  },
+  "account": {
+    "homes": {
+      "Homes": [
+        {
+          "Id": "id-57c49dd2",
+          "Name": "<name>",
+          "Address": "<redacted>",
+          "Owner": "<redacted>",
+          "AllowedUsers": "<redacted>",
+          "Zones": [],
+          "ERate": "0.0616"
+        }
+      ]
+    },
+    "schedules": {
+      "Schedules": [
+        {
+          "Device": "device-f0e5a675",
+          "ScheduledActions": {
+            "Monday": [],
+            "Thursday": [],
+            "Friday": [],
+            "Sunday": [],
+            "Wednesday": [],
+            "Tuesday": [],
+            "Saturday": []
+          }
+        },
+        {
+          "Device": "device-728d8928",
+          "ScheduledActions": {
+            "Monday": [],
+            "Thursday": [],
+            "Friday": [],
+            "Sunday": [],
+            "Wednesday": [],
+            "Tuesday": [],
+            "Saturday": []
+          }
+        }
+      ]
+    }
+  },
+  "review": []
+}

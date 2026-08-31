@@ -11,4 +11,10 @@ build/
 .coverage
 htmlcov/
 .env
-docs/samples/*.private.json
+# raw captures carry device ids, serials and names; only processed
+# samples are shareable
+docs/samples/raw/
+
+# session caches; the default lives outside the repo, this covers --session overrides
+*session.json
+.pymysa/

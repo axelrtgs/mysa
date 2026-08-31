@@ -1,0 +1,222 @@
+{
+  "device": "device-42d6d24f",
+  "model": "BB-V3-0",
+  "passed": true,
+  "results": [
+    {
+      "parameter": "targetHeat.setpoint",
+      "original": 16,
+      "written": 6,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "targetHeat.setpoint",
+      "original": 16,
+      "written": 14.5,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "targetHeat.setpoint",
+      "original": 16,
+      "written": 23,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "physicalInterface.lockout",
+      "original": 0,
+      "written": 1,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "physicalInterface.lockout",
+      "original": 0,
+      "written": 3,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "physicalInterface.wakeOnApproach",
+      "original": 0,
+      "written": 1,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "physicalInterface.doCheckmark",
+      "original": 0,
+      "written": 1,
+      "status": "not applied",
+      "detail": "declined in mode 4"
+    },
+    {
+      "parameter": "physicalInterface.format",
+      "original": "C",
+      "written": "F",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "physicalInterface.intensityMode",
+      "original": 1,
+      "written": 0,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "physicalInterface.intensityMode",
+      "original": 1,
+      "written": 2,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "physicalInterface.intensityMode",
+      "original": 1,
+      "written": 3,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "physicalInterface.activeIntensity",
+      "original": 100,
+      "written": 90,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "physicalInterface.idleIntensity",
+      "original": 30,
+      "written": 40,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "physicalInterface.woaSensitivity",
+      "original": 50,
+      "written": 60,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "physicalInterface.darkRoomLevel",
+      "original": 5,
+      "written": 6,
+      "status": "not applied",
+      "detail": "declined in mode 4"
+    },
+    {
+      "parameter": "physicalInterface.brightRoomLevel",
+      "original": 500,
+      "written": 510,
+      "status": "not applied",
+      "detail": "declined in mode 4"
+    },
+    {
+      "parameter": "bbConfig.controlType",
+      "original": 0,
+      "written": 1,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "bbConfig.controlType",
+      "original": 0,
+      "written": 2,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "bbConfig.hysteresisMinSwitchMinutes",
+      "original": 5,
+      "written": 6,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "bbConfig.hysteresisBandLow",
+      "original": 0,
+      "written": 1,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "bbConfig.hysteresisBandHigh",
+      "original": 0,
+      "written": 1,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "tracking.tracking",
+      "original": 0,
+      "written": "internal",
+      "status": "rejected",
+      "detail": "body/tracking/tracking must be number"
+    },
+    {
+      "parameter": "tracking.tracking",
+      "original": 0,
+      "written": "remote",
+      "status": "rejected",
+      "detail": "body/tracking/tracking must be number"
+    },
+    {
+      "parameter": "tracking.trackingFallback",
+      "original": 0,
+      "written": 1,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "tracking.ambientOffset",
+      "original": 0,
+      "written": -5,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "tracking.ambientOffset",
+      "original": 0,
+      "written": 0.5,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "tracking.ambientOffset",
+      "original": 0,
+      "written": 5,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "tracking.remoteTTL",
+      "original": 300,
+      "written": 360,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "cloudFeatures.cloudEarlyOn",
+      "original": {
+        "enabled": true
+      },
+      "written": {
+        "enabled": false
+      },
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "modes.mode",
+      "original": 0,
+      "written": 4,
+      "status": "passed",
+      "detail": ""
+    }
+  ],
+  "review": []
+}

@@ -1,0 +1,312 @@
+{
+  "device": {
+    "AllowedUsers": "<redacted>",
+    "Animation": "off",
+    "AutoBrightness": false,
+    "Brightness": {
+      "a_b": 0,
+      "a_br": 85,
+      "i_dr": 35,
+      "i_br": 35,
+      "a_dr": 85
+    },
+    "ButtonAVE": 16,
+    "ButtonDI": 8,
+    "ButtonLowPower": 0,
+    "ButtonPolling": 175,
+    "ButtonRepeatDelay": 20,
+    "ButtonRepeatStart": 44,
+    "ButtonState": "Unlocked",
+    "ButtonThreshold": 10,
+    "DutyCycleOpt": 7,
+    "Format": "celsius",
+    "HeaterType": "fan forced",
+    "Home": "<redacted>",
+    "Id": "device-728d8928",
+    "LastPaired": 1698618390,
+    "MaxBrightness": 85,
+    "MaxCurrent": "5.813752",
+    "MaxSetpoint": 24,
+    "MinBrightness": 35,
+    "MinSetpoint": 5,
+    "Mode": {
+      "LastUpdated": 1788156727187,
+      "Id": 1
+    },
+    "Model": "BB-V1-0",
+    "Name": "<name>",
+    "Owner": "<redacted>",
+    "ProximityMode": true,
+    "TimeZone": "America/Toronto",
+    "Voltage": 240,
+    "ecoMode": 1,
+    "schedGlobalOffset": 0
+  },
+  "observations": [
+    {
+      "label": "early on",
+      "changes": [
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-728d8928.schedGlobalOffset",
+          "before": 0,
+          "after": 1
+        }
+      ]
+    },
+    {
+      "label": "added a schedule",
+      "changes": [
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-728d8928.Schedule",
+          "before": null,
+          "after": "id-ee36dbe1"
+        },
+        {
+          "section": "schedule",
+          "field": "holding",
+          "before": null,
+          "after": true
+        },
+        {
+          "section": "schedule",
+          "field": "nextEvent",
+          "before": null,
+          "after": 1788170400
+        },
+        {
+          "section": "schedule",
+          "field": "resolved",
+          "before": null,
+          "after": true
+        },
+        {
+          "section": "schedules",
+          "field": "Schedules[0].Device",
+          "before": "device-f0e5a675",
+          "after": "device-728d8928"
+        },
+        {
+          "section": "schedules",
+          "field": "Schedules[1].Device",
+          "before": "device-728d8928",
+          "after": "device-f0e5a675"
+        }
+      ]
+    },
+    {
+      "label": "hold until i change",
+      "changes": [
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-728d8928.Mode.LastUpdated",
+          "before": 1788156727187,
+          "after": 1788161289537
+        },
+        {
+          "section": "physicalInterface",
+          "field": "activeIntensity",
+          "before": 85,
+          "after": 100
+        },
+        {
+          "section": "schedule",
+          "field": "nextEvent",
+          "before": 1788170400,
+          "after": null
+        }
+      ]
+    },
+    {
+      "label": "",
+      "changes": [
+        {
+          "section": "schedules",
+          "field": "Schedules[0].Device",
+          "before": "device-728d8928",
+          "after": "device-f0e5a675"
+        },
+        {
+          "section": "schedules",
+          "field": "Schedules[1].Device",
+          "before": "device-f0e5a675",
+          "after": "device-728d8928"
+        }
+      ]
+    },
+    {
+      "label": "",
+      "changes": [
+        {
+          "section": "schedules",
+          "field": "Schedules[0].Device",
+          "before": "device-f0e5a675",
+          "after": "device-728d8928"
+        },
+        {
+          "section": "schedules",
+          "field": "Schedules[1].Device",
+          "before": "device-728d8928",
+          "after": "device-f0e5a675"
+        }
+      ]
+    },
+    {
+      "label": "",
+      "changes": [
+        {
+          "section": "schedules",
+          "field": "Schedules[0].Device",
+          "before": "device-728d8928",
+          "after": "device-f0e5a675"
+        },
+        {
+          "section": "schedules",
+          "field": "Schedules[1].Device",
+          "before": "device-f0e5a675",
+          "after": "device-728d8928"
+        }
+      ]
+    },
+    {
+      "label": "nothing i thing because two devices have schedules its returning in a non deterministic order",
+      "changes": [
+        {
+          "section": "schedules",
+          "field": "Schedules[0].Device",
+          "before": "device-f0e5a675",
+          "after": "device-728d8928"
+        },
+        {
+          "section": "schedules",
+          "field": "Schedules[1].Device",
+          "before": "device-728d8928",
+          "after": "device-f0e5a675"
+        }
+      ]
+    },
+    {
+      "label": "",
+      "changes": [
+        {
+          "section": "schedules",
+          "field": "Schedules[0].Device",
+          "before": "device-728d8928",
+          "after": "device-f0e5a675"
+        },
+        {
+          "section": "schedules",
+          "field": "Schedules[1].Device",
+          "before": "device-f0e5a675",
+          "after": "device-728d8928"
+        }
+      ]
+    },
+    {
+      "label": "",
+      "changes": [
+        {
+          "section": "schedules",
+          "field": "Schedules[0].Device",
+          "before": "device-f0e5a675",
+          "after": "device-728d8928"
+        },
+        {
+          "section": "schedules",
+          "field": "Schedules[1].Device",
+          "before": "device-728d8928",
+          "after": "device-f0e5a675"
+        }
+      ]
+    },
+    {
+      "label": "",
+      "changes": [
+        {
+          "section": "schedules",
+          "field": "Schedules[0].Device",
+          "before": "device-728d8928",
+          "after": "device-f0e5a675"
+        },
+        {
+          "section": "schedules",
+          "field": "Schedules[1].Device",
+          "before": "device-f0e5a675",
+          "after": "device-728d8928"
+        }
+      ]
+    },
+    {
+      "label": "",
+      "changes": [
+        {
+          "section": "schedules",
+          "field": "Schedules[0].Device",
+          "before": "device-f0e5a675",
+          "after": "device-728d8928"
+        },
+        {
+          "section": "schedules",
+          "field": "Schedules[1].Device",
+          "before": "device-728d8928",
+          "after": "device-f0e5a675"
+        }
+      ]
+    },
+    {
+      "label": "",
+      "changes": [
+        {
+          "section": "schedules",
+          "field": "Schedules[0].Device",
+          "before": "device-728d8928",
+          "after": "device-f0e5a675"
+        },
+        {
+          "section": "schedules",
+          "field": "Schedules[1].Device",
+          "before": "device-f0e5a675",
+          "after": "device-728d8928"
+        }
+      ]
+    },
+    {
+      "label": "",
+      "changes": [
+        {
+          "section": "schedules",
+          "field": "Schedules[0].Device",
+          "before": "device-f0e5a675",
+          "after": "device-728d8928"
+        },
+        {
+          "section": "schedules",
+          "field": "Schedules[1].Device",
+          "before": "device-728d8928",
+          "after": "device-f0e5a675"
+        }
+      ]
+    },
+    {
+      "label": "",
+      "changes": [
+        {
+          "section": "schedules",
+          "field": "Schedules[0].Device",
+          "before": "device-728d8928",
+          "after": "device-f0e5a675"
+        },
+        {
+          "section": "schedules",
+          "field": "Schedules[1].Device",
+          "before": "device-f0e5a675",
+          "after": "device-728d8928"
+        }
+      ]
+    }
+  ],
+  "review": [
+    ".observations[].label"
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "device": "device-728d8928",
+  "model": "BB-V1-0",
+  "passed": true,
+  "results": [
+    {
+      "parameter": "targetHeat.setpoint",
+      "original": 20,
+      "written": 5,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "targetHeat.setpoint",
+      "original": 20,
+      "written": 14.5,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "targetHeat.setpoint",
+      "original": 20,
+      "written": 24,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "physicalInterface.lockout",
+      "original": 0,
+      "written": 3,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "physicalInterface.format",
+      "original": "C",
+      "written": "F",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "physicalInterface.intensityMode",
+      "original": 0,
+      "written": 1,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "physicalInterface.activeIntensity",
+      "original": 85,
+      "written": 95,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "physicalInterface.idleIntensity",
+      "original": 35,
+      "written": 45,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "bbConfig.controlType",
+      "original": 7,
+      "written": 0,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "bbConfig.controlType",
+      "original": 7,
+      "written": 4,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "bbConfig.controlType",
+      "original": 7,
+      "written": 5,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "bbConfig.controlType",
+      "original": 7,
+      "written": 6,
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "parameter": "schedule.holding",
+      "original": true,
+      "written": false,
+      "status": "not applied",
+      "detail": "declined in mode 4"
+    },
+    {
+      "parameter": "modes.mode",
+      "original": 0,
+      "written": 4,
+      "status": "passed",
+      "detail": ""
+    }
+  ],
+  "review": []
+}

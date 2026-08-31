@@ -1,0 +1,716 @@
+{
+  "device": {
+    "AllowedUsers": "<redacted>",
+    "Animation": "off",
+    "Brand": {
+      "Brand": "FUJITSU",
+      "Id": 2492,
+      "remoteModelNumber": "",
+      "major": 0
+    },
+    "ButtonAVE": 16,
+    "ButtonDI": 8,
+    "ButtonLowPower": 0,
+    "ButtonPolling": 175,
+    "ButtonRepeatDelay": 20,
+    "ButtonRepeatStart": 44,
+    "ButtonState": "Unlocked",
+    "ButtonThreshold": 10,
+    "CodeNum": "671",
+    "Format": "celsius",
+    "HeaterType": "Baseboard",
+    "Home": "<redacted>",
+    "Id": "device-c2c51c23",
+    "IsThermostatic": true,
+    "LastPaired": 1698618728,
+    "MaxBrightness": 100,
+    "MaxCurrent": "0.000000",
+    "MaxSetpoint": 24,
+    "MinBrightness": 50,
+    "MinSetpoint": 19,
+    "Mode": {
+      "Id": 1
+    },
+    "Model": "AC-V1-0",
+    "Name": "<name>",
+    "Owner": "<redacted>",
+    "Schedule": "id-a6027072",
+    "SetupRequired": false,
+    "SupportedCaps": {
+      "keys": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        47
+      ],
+      "version": "1.1",
+      "modifiedKeys": [
+        1,
+        2,
+        3,
+        7,
+        4,
+        6,
+        5,
+        11,
+        10,
+        9,
+        8,
+        47
+      ],
+      "tempRange": [
+        16,
+        30
+      ],
+      "modes": {
+        "2": {
+          "tempRanges": [
+            [
+              16,
+              30
+            ],
+            [
+              25,
+              25
+            ]
+          ]
+        },
+        "3": {
+          "tempRanges": [
+            [
+              25,
+              25
+            ]
+          ]
+        },
+        "4": {
+          "tempRanges": [
+            [
+              25,
+              25
+            ],
+            [
+              25,
+              25
+            ],
+            [
+              16,
+              30
+            ],
+            [
+              16,
+              30
+            ],
+            [
+              16,
+              30
+            ],
+            [
+              16,
+              30
+            ],
+            [
+              17,
+              30
+            ],
+            [
+              16,
+              29
+            ]
+          ]
+        },
+        "5": {
+          "tempRanges": [
+            [
+              25,
+              25
+            ]
+          ]
+        },
+        "6": {
+          "tempRanges": [
+            [
+              25,
+              25
+            ]
+          ]
+        },
+        "99": {
+          "tempRanges": [
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      }
+    },
+    "TimeZone": "America/Toronto",
+    "Voltage": 240
+  },
+  "observations": [
+    {
+      "label": "mode off",
+      "changes": [
+        {
+          "section": "modes",
+          "field": "mode",
+          "before": 3,
+          "after": 0
+        }
+      ]
+    },
+    {
+      "label": "mode heat",
+      "changes": [
+        {
+          "section": "modes",
+          "field": "mode",
+          "before": 0,
+          "after": 4
+        }
+      ]
+    },
+    {
+      "label": "mode auto",
+      "changes": [
+        {
+          "section": "modes",
+          "field": "mode",
+          "before": 4,
+          "after": 1
+        }
+      ]
+    },
+    {
+      "label": "mode dry",
+      "changes": [
+        {
+          "section": "modes",
+          "field": "mode",
+          "before": 1,
+          "after": 8
+        }
+      ]
+    },
+    {
+      "label": "mode fan only",
+      "changes": [
+        {
+          "section": "modes",
+          "field": "mode",
+          "before": 8,
+          "after": 7
+        }
+      ]
+    },
+    {
+      "label": "mode cool",
+      "changes": [
+        {
+          "section": "modes",
+          "field": "mode",
+          "before": 7,
+          "after": 3
+        }
+      ]
+    },
+    {
+      "label": "fan low",
+      "changes": [
+        {
+          "section": "modes",
+          "field": "fan_mode",
+          "before": 0,
+          "after": 1
+        }
+      ]
+    },
+    {
+      "label": "fan medium",
+      "changes": [
+        {
+          "section": "modes",
+          "field": "fan_mode",
+          "before": 1,
+          "after": 2
+        }
+      ]
+    },
+    {
+      "label": "fan high",
+      "changes": [
+        {
+          "section": "modes",
+          "field": "fan_mode",
+          "before": 2,
+          "after": 3
+        }
+      ]
+    },
+    {
+      "label": "fan auto",
+      "changes": [
+        {
+          "section": "modes",
+          "field": "fan_mode",
+          "before": 3,
+          "after": 0
+        }
+      ]
+    },
+    {
+      "label": "swing off",
+      "changes": [
+        {
+          "section": "modes",
+          "field": "verticalSwingState",
+          "before": 2,
+          "after": 1
+        }
+      ]
+    },
+    {
+      "label": "swing on",
+      "changes": [
+        {
+          "section": "modes",
+          "field": "verticalSwingState",
+          "before": 1,
+          "after": 2
+        }
+      ]
+    },
+    {
+      "label": "locked",
+      "changes": [
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.ButtonState",
+          "before": "Unlocked",
+          "after": "Locked"
+        },
+        {
+          "section": "physicalInterface",
+          "field": "lockout",
+          "before": 0,
+          "after": 3
+        }
+      ]
+    },
+    {
+      "label": "climate+ off",
+      "changes": [
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.IsThermostatic",
+          "before": true,
+          "after": false
+        }
+      ]
+    },
+    {
+      "label": "climate + on",
+      "changes": [
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.IsThermostatic",
+          "before": false,
+          "after": true
+        }
+      ]
+    },
+    {
+      "label": "turn available modes heat off",
+      "changes": [
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[10]",
+          "before": 8,
+          "after": null
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[11]",
+          "before": 47,
+          "after": null
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[2]",
+          "before": 3,
+          "after": 4
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[3]",
+          "before": 7,
+          "after": 6
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[4]",
+          "before": 4,
+          "after": 5
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[5]",
+          "before": 6,
+          "after": 11
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[6]",
+          "before": 5,
+          "after": 10
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[7]",
+          "before": 11,
+          "after": 9
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[8]",
+          "before": 10,
+          "after": 8
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[9]",
+          "before": 9,
+          "after": 47
+        }
+      ]
+    },
+    {
+      "label": "heat was off now dry off",
+      "changes": [
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[4]",
+          "before": 5,
+          "after": 11
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[5]",
+          "before": 11,
+          "after": 10
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[6]",
+          "before": 10,
+          "after": 9
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[7]",
+          "before": 9,
+          "after": 8
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[8]",
+          "before": 8,
+          "after": 47
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[9]",
+          "before": 47,
+          "after": null
+        }
+      ]
+    },
+    {
+      "label": "heat and dry was off now fan only off",
+      "changes": [
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[3]",
+          "before": 6,
+          "after": 11
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[4]",
+          "before": 11,
+          "after": 10
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[5]",
+          "before": 10,
+          "after": 9
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[6]",
+          "before": 9,
+          "after": 8
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[7]",
+          "before": 8,
+          "after": 47
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[8]",
+          "before": 47,
+          "after": null
+        }
+      ]
+    },
+    {
+      "label": "dry only back on",
+      "changes": [
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[3]",
+          "before": 11,
+          "after": 5
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[4]",
+          "before": 10,
+          "after": 11
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[5]",
+          "before": 9,
+          "after": 10
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[6]",
+          "before": 8,
+          "after": 9
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[7]",
+          "before": 47,
+          "after": 8
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[8]",
+          "before": null,
+          "after": 47
+        }
+      ]
+    },
+    {
+      "label": "heat and dry",
+      "changes": [
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[10]",
+          "before": null,
+          "after": 47
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[2]",
+          "before": 4,
+          "after": 3
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[3]",
+          "before": 5,
+          "after": 7
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[4]",
+          "before": 11,
+          "after": 4
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[5]",
+          "before": 10,
+          "after": 5
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[6]",
+          "before": 9,
+          "after": 11
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[7]",
+          "before": 8,
+          "after": 10
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[8]",
+          "before": 47,
+          "after": 9
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[9]",
+          "before": null,
+          "after": 8
+        }
+      ]
+    },
+    {
+      "label": "heat only",
+      "changes": [
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[10]",
+          "before": 47,
+          "after": null
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[5]",
+          "before": 5,
+          "after": 11
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[6]",
+          "before": 11,
+          "after": 10
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[7]",
+          "before": 10,
+          "after": 9
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[8]",
+          "before": 9,
+          "after": 8
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[9]",
+          "before": 8,
+          "after": 47
+        }
+      ]
+    },
+    {
+      "label": "heat and fan only",
+      "changes": [
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[10]",
+          "before": null,
+          "after": 47
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[5]",
+          "before": 11,
+          "after": 6
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[6]",
+          "before": 10,
+          "after": 11
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[7]",
+          "before": 9,
+          "after": 10
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[8]",
+          "before": 8,
+          "after": 9
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[9]",
+          "before": 47,
+          "after": 8
+        }
+      ]
+    },
+    {
+      "label": "all back on. ac is always on",
+      "changes": [
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[10]",
+          "before": 47,
+          "after": 8
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[11]",
+          "before": null,
+          "after": 47
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[6]",
+          "before": 11,
+          "after": 5
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[7]",
+          "before": 10,
+          "after": 11
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[8]",
+          "before": 9,
+          "after": 10
+        },
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[9]",
+          "before": 8,
+          "after": 9
+        }
+      ]
+    },
+    {
+      "label": "vertical swing off",
+      "changes": [
+        {
+          "section": "devices",
+          "field": "DevicesObj.device-c2c51c23.SupportedCaps.modifiedKeys[11]",
+          "before": 47,
+          "after": null
+        }
+      ]
+    }
+  ],
+  "review": []
+}

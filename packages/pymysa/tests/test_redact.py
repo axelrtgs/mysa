@@ -159,3 +159,39 @@ def test_a_home_record_keeps_its_shape_without_its_location():
     home = scrubbed["Homes"][0]
     assert home["postalCode"] == "<redacted>"
     assert home["timezone"] == "America/Toronto"
+
+
+def test_a_uuid_is_replaced_whole() -> None:
+    """Its last group is twelve hex characters, which is also a device id.
+
+    Substituting that alone left four fifths of every home and user id in the samples.
+    """
+    redactor = Redactor()
+
+    scrubbed = redactor.scrub({"Id": "0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d"})
+
+    assert scrubbed["Id"].startswith("id-")
+    assert "0a1b2c3d" not in scrubbed["Id"]
+    assert "0e1f2a3b4c5d" not in scrubbed["Id"]
+
+
+def test_a_device_id_beside_a_uuid_still_becomes_a_device_alias() -> None:
+    redactor = Redactor()
+
+    scrubbed = redactor.scrub({
+        "Device": "aabbccddeeff",
+        "Schedule": "0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d",
+    })
+
+    assert scrubbed["Device"].startswith("device-")
+    assert scrubbed["Schedule"].startswith("id-")
+
+
+def test_the_same_uuid_gets_the_same_alias_everywhere() -> None:
+    redactor = Redactor()
+    home = "0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d"
+
+    scrubbed = redactor.scrub({"Homes": [{"Id": home}], "note": f"home {home} is default"})
+
+    alias = scrubbed["Homes"][0]["Id"]
+    assert alias in scrubbed["note"]

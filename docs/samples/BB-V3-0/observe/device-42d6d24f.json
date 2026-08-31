@@ -1,0 +1,53 @@
+{
+  "device": {
+    "AllowedUsers": "<redacted>",
+    "Animation": "off",
+    "AutoBrightness": true,
+    "ButtonAVE": 16,
+    "ButtonDI": 8,
+    "ButtonLowPower": 0,
+    "ButtonPolling": 175,
+    "ButtonRepeatDelay": 20,
+    "ButtonRepeatStart": 44,
+    "ButtonState": "Unlocked",
+    "ButtonThreshold": 10,
+    "Format": "celsius",
+    "Home": "<redacted>",
+    "Id": "device-42d6d24f",
+    "LastPaired": 1785902438,
+    "MaxBrightness": 100,
+    "MaxSetpoint": 24,
+    "MinBrightness": 25,
+    "MinSetpoint": 5,
+    "Mode": {
+      "Id": 1
+    },
+    "Model": "BB-V3-0",
+    "Name": "<name>",
+    "Owner": "<redacted>",
+    "ProximityMode": true,
+    "TimeZone": "America/Toronto",
+    "Voltage": 240,
+    "ecoMode": 1
+  },
+  "observations": [
+    {
+      "label": "deleted schedule",
+      "changes": [
+        {
+          "section": "schedule",
+          "field": "holding",
+          "before": true,
+          "after": null
+        },
+        {
+          "section": "schedule",
+          "field": "resolved",
+          "before": true,
+          "after": null
+        }
+      ]
+    }
+  ],
+  "review": []
+}

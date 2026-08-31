@@ -1,0 +1,889 @@
+{
+  "device": {
+    "AllowedUsers": "<redacted>",
+    "Animation": "off",
+    "AutoBrightness": true,
+    "ButtonAVE": 16,
+    "ButtonDI": 8,
+    "ButtonLowPower": 0,
+    "ButtonPolling": 175,
+    "ButtonRepeatDelay": 20,
+    "ButtonRepeatStart": 44,
+    "ButtonState": "Unlocked",
+    "ButtonThreshold": 10,
+    "Format": "celsius",
+    "Home": "<redacted>",
+    "Id": "device-42d6d24f",
+    "LastPaired": 1785902438,
+    "MaxBrightness": 100,
+    "MaxSetpoint": 24,
+    "MinBrightness": 25,
+    "MinSetpoint": 5,
+    "Mode": {
+      "Id": 1
+    },
+    "Model": "BB-V3-0",
+    "Name": "<name>",
+    "Owner": "<redacted>",
+    "ProximityMode": true,
+    "TimeZone": "America/Toronto",
+    "Voltage": 240,
+    "ecoMode": 1
+  },
+  "state": {
+    "data": {
+      "latestTelemetry": {
+        "isConnected": true,
+        "lastConnected": 1788162704,
+        "reading": {
+          "deviceId": "device-42d6d24f",
+          "timestamp": 1788162704,
+          "rawTemperature": 24.38,
+          "roomTemperature": 23.7,
+          "humidity": 47,
+          "coreTemperature": 23.92,
+          "secondaryRawTemperature": 24.17,
+          "dutyCycle": 0,
+          "current": 0,
+          "energy": 0,
+          "remoteTemperature": -30,
+          "configuredTracking": 0,
+          "onTime": 0,
+          "mode": 0,
+          "heatSetpoint": 16,
+          "powerConsumed": 0,
+          "timestampEstimated": true
+        }
+      },
+      "targetHeat": {
+        "desired": {
+          "timestamp": 1788160775,
+          "setpoint": 16,
+          "lockoutMax": 23,
+          "lockoutMin": 6
+        },
+        "reported": {
+          "timestamp": 1788160730,
+          "setpoint": 16,
+          "lockoutMax": 23,
+          "lockoutMin": 6
+        }
+      },
+      "modes": {
+        "desired": {
+          "timestamp": 1788160779,
+          "mode": 0,
+          "lockoutModes": 255
+        },
+        "reported": {
+          "timestamp": 1788160779,
+          "mode": 0,
+          "lockoutModes": 255
+        }
+      },
+      "identity": {
+        "desired": {
+          "timestamp": 1788089526,
+          "model": "BB-V3-0",
+          "fw": "5.1.9"
+        },
+        "reported": {
+          "timestamp": 1788089526,
+          "model": "BB-V3-0",
+          "serial": "<redacted>",
+          "fw": "5.1.9"
+        }
+      },
+      "physicalInterface": {
+        "desired": {
+          "timestamp": 1788162591,
+          "activeIntensity": 100,
+          "idleIntensity": 30,
+          "wakeOnApproach": 0,
+          "woaSensitivity": 50,
+          "lockout": 0,
+          "format": "C",
+          "intensityMode": 1,
+          "darkRoomLevel": 5,
+          "brightRoomLevel": 500,
+          "doCheckmark": 1
+        },
+        "reported": {
+          "timestamp": 1788160933,
+          "activeIntensity": 100,
+          "idleIntensity": 30,
+          "wakeOnApproach": 0,
+          "woaSensitivity": 50,
+          "lockout": 0,
+          "format": "C",
+          "intensityMode": 1,
+          "darkRoomLevel": 5,
+          "brightRoomLevel": 500,
+          "doCheckmark": 0
+        }
+      },
+      "telemetry": {
+        "desired": {
+          "timestamp": 1788089525,
+          "minReportRateSeconds": 60,
+          "roomTemperatureDelta": 0.3,
+          "probeTemperatureDelta": 0.3,
+          "humidityDeltaPercent": 5,
+          "ota_blocks_per_batch": 64
+        },
+        "reported": {
+          "timestamp": 1788089525,
+          "minReportRateSeconds": 60,
+          "roomTemperatureDelta": 0.3,
+          "humidityDeltaPercent": 5,
+          "ota_blocks_per_batch": 64
+        }
+      },
+      "tracking": {
+        "desired": {
+          "timestamp": 1788160493,
+          "tracking": 0,
+          "trackingFallback": 0,
+          "ambientOffset": 0,
+          "remoteTemperature": -30,
+          "remoteTimestamp": 0,
+          "remoteTTL": 300
+        },
+        "reported": {
+          "timestamp": 1788160493,
+          "tracking": 0,
+          "trackingFallback": 0,
+          "ambientOffset": 0,
+          "remoteTemperature": -30,
+          "remoteTimestamp": 0,
+          "remoteTTL": 300
+        }
+      },
+      "diagnostics": {
+        "desired": {
+          "timestamp": 1788162571,
+          "freeHeap": 57467,
+          "faultTest": "AKoYqWKkipEqRqoYqWKEihE=",
+          "pubKeyHash": "<redacted>",
+          "privKeyOk": "<redacted>",
+          "secureBootEnabled": 1,
+          "encryptionEnabled": 1,
+          "freePsram": 1964836,
+          "bootCount": 6,
+          "bootTime": 1787870261,
+          "bootInfo": 515,
+          "errorDetection": 0
+        },
+        "reported": {
+          "timestamp": 1788162571,
+          "freeHeap": 57467,
+          "faultTest": "AKoYqWKkipEqRqoYqWKEihE=",
+          "pubKeyHash": "<redacted>",
+          "privKeyOk": "<redacted>",
+          "secureBootEnabled": 1,
+          "encryptionEnabled": 1,
+          "freePsram": 1964836,
+          "bootCount": 6,
+          "bootTime": 1787870261,
+          "bootInfo": 515,
+          "errorDetection": 0
+        }
+      },
+      "matter": {
+        "desired": {
+          "timestamp": 1788089526,
+          "pai": "OK",
+          "dac": "OK",
+          "cd": "OK",
+          "provisioned": "OK",
+          "product_info": "OK",
+          "commissioning_params": "OK",
+          "dacSalt": "",
+          "commissioned": 1,
+          "fabricVendorIds": "1:4937,2:4996",
+          "commissioningWindowOpen": 0,
+          "commissionedAt": 0,
+          "decommissionedAt": 0,
+          "decommissionSource": 0
+        },
+        "reported": {
+          "timestamp": 1788089526,
+          "pai": "OK",
+          "dac": "OK",
+          "cd": "OK",
+          "provisioned": "OK",
+          "product_info": "OK",
+          "commissioning_params": "OK",
+          "dacSalt": "",
+          "commissioned": 1,
+          "fabricVendorIds": "1:4937,2:4996",
+          "commissioningWindowOpen": 0,
+          "commissionedAt": 0,
+          "decommissionedAt": 0,
+          "decommissionSource": 0
+        }
+      },
+      "power": {
+        "desired": {
+          "timestamp": 1788089526,
+          "voltage": 0,
+          "current": 0,
+          "wattage": 0,
+          "dutyCycle": 0,
+          "fault": 0
+        },
+        "reported": {
+          "timestamp": 1788089526,
+          "voltage": 240,
+          "current": 12458,
+          "wattage": 2989,
+          "dutyCycle": 0,
+          "fault": 0
+        }
+      },
+      "bbConfig": {
+        "desired": {
+          "timestamp": 1788160973,
+          "controlType": 0,
+          "pidFastKp": 0.37284642457962,
+          "pidFastKi": 0.000805277028121054,
+          "pidFastKd": 0,
+          "pidFastDutyCycleLength": 15,
+          "pidFastMinOnTime": 1,
+          "pidFastMinOffTime": 100,
+          "pidSlowKp": 0.37284642457962,
+          "pidSlowKi": 0.000805277028121054,
+          "pidSlowKd": 0,
+          "pidSlowDutyCycleLength": 180,
+          "pidSlowMinOnTime": 25,
+          "pidSlowMinOffTime": 75,
+          "hysteresisMinSwitchMinutes": 5,
+          "hysteresisBandLow": 0,
+          "hysteresisBandHigh": 0
+        },
+        "reported": {
+          "timestamp": 1788160973,
+          "controlType": 0,
+          "pidFastKp": 0.37284642457962,
+          "pidFastKi": 0.000805277028121054,
+          "pidFastKd": 0,
+          "pidFastDutyCycleLength": 15,
+          "pidFastMinOnTime": 1,
+          "pidFastMinOffTime": 100,
+          "pidSlowKp": 0.37284642457962,
+          "pidSlowKi": 0.000805277028121054,
+          "pidSlowKd": 0,
+          "pidSlowDutyCycleLength": 180,
+          "pidSlowMinOnTime": 25,
+          "pidSlowMinOffTime": 75,
+          "hysteresisMinSwitchMinutes": 5,
+          "hysteresisBandLow": 0,
+          "hysteresisBandHigh": 0
+        }
+      },
+      "cloudFeatures": {
+        "cloudEarlyOn": {
+          "enabled": true
+        }
+      },
+      "drState": {
+        "inEvent": false,
+        "state": "none"
+      }
+    }
+  },
+  "capabilities": {
+    "version": "1.0",
+    "hardware": {
+      "sensors": {
+        "internalTemperatureSensor": true,
+        "externalTemperatureProbeConnector": false,
+        "humiditySensor": true,
+        "proximitySensor": true,
+        "ambientLightSensor": true
+      },
+      "communication": {
+        "bluetoothModule": true,
+        "wifiModule": true,
+        "nfcChip": false
+      }
+    },
+    "features": {
+      "climateControl": {
+        "mode": {
+          "userControllable": true,
+          "type": "enum",
+          "validValues": [
+            "off",
+            "heat"
+          ]
+        },
+        "heat": {
+          "stages": 1,
+          "setpoint": {
+            "userControllable": true,
+            "type": "float",
+            "validValues": [
+              5,
+              5.5,
+              6,
+              6.5,
+              7,
+              7.5,
+              8,
+              8.5,
+              9,
+              9.5,
+              10,
+              10.5,
+              11,
+              11.5,
+              12,
+              12.5,
+              13,
+              13.5,
+              14,
+              14.5,
+              15,
+              15.5,
+              16,
+              16.5,
+              17,
+              17.5,
+              18,
+              18.5,
+              19,
+              19.5,
+              20,
+              20.5,
+              21,
+              21.5,
+              22,
+              22.5,
+              23,
+              23.5,
+              24,
+              24.5,
+              25,
+              25.5,
+              26,
+              26.5,
+              27,
+              27.5,
+              28,
+              28.5,
+              29,
+              29.5,
+              30
+            ]
+          }
+        },
+        "advancedConfig": {
+          "baseboardHeating": {
+            "controlType": {
+              "userControllable": true,
+              "type": "integer",
+              "validValues": [
+                0,
+                1,
+                2
+              ]
+            },
+            "pidFastKp": {
+              "userControllable": false,
+              "type": "float",
+              "minValue": 0
+            },
+            "pidFastKi": {
+              "userControllable": false,
+              "type": "float",
+              "minValue": 0
+            },
+            "pidFastKd": {
+              "userControllable": false,
+              "type": "float",
+              "minValue": 0
+            },
+            "pidFastIntegratorBand": {
+              "userControllable": false,
+              "type": "integer",
+              "minValue": 0,
+              "maxValue": 10000
+            },
+            "pidFastDutyCycleLength": {
+              "userControllable": false,
+              "type": "integer",
+              "minValue": 1,
+              "maxValue": 3600
+            },
+            "pidFastMinOnTime": {
+              "userControllable": false,
+              "type": "integer",
+              "minValue": 0,
+              "maxValue": 20
+            },
+            "pidFastMinOffTime": {
+              "userControllable": false,
+              "type": "integer",
+              "minValue": 0,
+              "maxValue": 20
+            },
+            "pidSlowKp": {
+              "userControllable": false,
+              "type": "float",
+              "minValue": 0
+            },
+            "pidSlowKi": {
+              "userControllable": false,
+              "type": "float",
+              "minValue": 0
+            },
+            "pidSlowKd": {
+              "userControllable": false,
+              "type": "float",
+              "minValue": 0
+            },
+            "pidSlowIntegratorBand": {
+              "userControllable": false,
+              "type": "integer",
+              "minValue": 0,
+              "maxValue": 10000
+            },
+            "pidSlowDutyCycleLength": {
+              "userControllable": false,
+              "type": "integer",
+              "minValue": 1,
+              "maxValue": 3600
+            },
+            "pidSlowMinOnTime": {
+              "userControllable": false,
+              "type": "integer",
+              "minValue": 0,
+              "maxValue": 20
+            },
+            "pidSlowMinOffTime": {
+              "userControllable": false,
+              "type": "integer",
+              "minValue": 0,
+              "maxValue": 20
+            },
+            "hysteresisMinSwitchMinutes": {
+              "userControllable": false,
+              "type": "integer",
+              "minValue": 0,
+              "maxValue": 1440
+            },
+            "hysteresisBandLow": {
+              "userControllable": false,
+              "type": "integer",
+              "minValue": 0,
+              "maxValue": 1000
+            },
+            "hysteresisBandHigh": {
+              "userControllable": false,
+              "type": "integer",
+              "minValue": 0,
+              "maxValue": 1000
+            }
+          }
+        }
+      },
+      "sensing": {
+        "temperature": {
+          "sensors": {
+            "internal": true,
+            "externalProbe": false,
+            "remote": true
+          },
+          "trackingSensor": {
+            "userControllable": true,
+            "type": "enum",
+            "validValues": [
+              "internal",
+              "remote"
+            ]
+          },
+          "temperatureOffset": {
+            "userControllable": true,
+            "type": "float",
+            "validValues": [
+              -5,
+              -4.5,
+              -4,
+              -3.5,
+              -3,
+              -2.5,
+              -2,
+              -1.5,
+              -1,
+              -0.5,
+              0,
+              0.5,
+              1,
+              1.5,
+              2,
+              2.5,
+              3,
+              3.5,
+              4,
+              4.5,
+              5
+            ],
+            "value": 0
+          }
+        },
+        "humidity": true
+      },
+      "interface": {
+        "wakeOnApproach": {
+          "userControllable": true,
+          "type": "boolean"
+        },
+        "lockout": {
+          "userControllable": true,
+          "type": "integer",
+          "validValues": [
+            0,
+            1,
+            3
+          ]
+        },
+        "brightness": {
+          "userControllable": true,
+          "type": "integer"
+        },
+        "unit": {
+          "userControllable": true,
+          "type": "enum",
+          "validValues": [
+            "C",
+            "F"
+          ]
+        },
+        "adaptiveBrightness": {
+          "intensityMode": {
+            "userControllable": true,
+            "type": "integer",
+            "validValues": [
+              0,
+              1,
+              2,
+              3
+            ]
+          }
+        },
+        "doCheckmark": {
+          "userControllable": true,
+          "type": "integer",
+          "validValues": [
+            0,
+            1
+          ]
+        }
+      },
+      "connectivity": {
+        "bluetooth": true,
+        "wifi": true,
+        "nfc": false,
+        "matter": true,
+        "homekit": false,
+        "googleHome": false,
+        "amazonAlexa": false
+      },
+      "smart": {
+        "energyReporting": true,
+        "scheduling": true,
+        "zoning": true,
+        "geofence": true,
+        "earlyOn": true,
+        "cloudEarlyOn": true,
+        "shortcuts": true,
+        "savedSchedules": true,
+        "wholeHomeEnergy": true,
+        "smartAlerts": {
+          "temperatureAlerts": {
+            "high": {
+              "enabled": {
+                "userControllable": true,
+                "type": "boolean"
+              },
+              "threshold": {
+                "userControllable": true,
+                "type": "float"
+              }
+            },
+            "low": {
+              "enabled": {
+                "userControllable": true,
+                "type": "boolean"
+              },
+              "threshold": {
+                "userControllable": true,
+                "type": "float"
+              }
+            }
+          },
+          "humidityAlerts": {
+            "high": {
+              "enabled": {
+                "userControllable": true,
+                "type": "boolean"
+              },
+              "threshold": {
+                "userControllable": true,
+                "type": "float"
+              }
+            },
+            "low": {
+              "enabled": {
+                "userControllable": true,
+                "type": "boolean"
+              },
+              "threshold": {
+                "userControllable": true,
+                "type": "float"
+              }
+            }
+          }
+        },
+        "powerMonitoring": {
+          "voltage": {
+            "userControllable": false,
+            "type": "integer",
+            "value": 240
+          },
+          "current": {
+            "userControllable": false,
+            "type": "integer",
+            "value": 12458
+          },
+          "wattage": {
+            "userControllable": false,
+            "type": "integer",
+            "value": 2989
+          },
+          "dutyCycle": {
+            "userControllable": false,
+            "type": "float",
+            "value": 0
+          },
+          "fault": {
+            "userControllable": false,
+            "type": "integer",
+            "validValues": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "value": 0
+          }
+        },
+        "diagnostics": {
+          "errorDetection": {
+            "userControllable": true,
+            "type": "integer",
+            "validValues": [
+              0,
+              1,
+              2
+            ],
+            "value": 0
+          }
+        }
+      }
+    },
+    "system": {
+      "deviceId": "device-42d6d24f",
+      "model": "BB-V3-0",
+      "firmwareVersion": "5.1.9",
+      "serialNumber": "<redacted>"
+    }
+  },
+  "update_available": {
+    "error": "/devices/update_available/device-42d6d24f returned 500: Check update failed for device-42d6d24f. Unable to determine allowed version"
+  },
+  "sections": {
+    "latestTelemetry": [
+      "isConnected",
+      "lastConnected",
+      "reading"
+    ],
+    "latestTelemetry.reading": [
+      "configuredTracking",
+      "coreTemperature",
+      "current",
+      "deviceId",
+      "dutyCycle",
+      "energy",
+      "heatSetpoint",
+      "humidity",
+      "mode",
+      "onTime",
+      "powerConsumed",
+      "rawTemperature",
+      "remoteTemperature",
+      "roomTemperature",
+      "secondaryRawTemperature",
+      "timestamp",
+      "timestampEstimated"
+    ],
+    "targetHeat": [
+      "lockoutMax",
+      "lockoutMin",
+      "setpoint",
+      "timestamp"
+    ],
+    "modes": [
+      "lockoutModes",
+      "mode",
+      "timestamp"
+    ],
+    "identity": [
+      "fw",
+      "model",
+      "serial",
+      "timestamp"
+    ],
+    "physicalInterface": [
+      "activeIntensity",
+      "brightRoomLevel",
+      "darkRoomLevel",
+      "doCheckmark",
+      "format",
+      "idleIntensity",
+      "intensityMode",
+      "lockout",
+      "timestamp",
+      "wakeOnApproach",
+      "woaSensitivity"
+    ],
+    "telemetry": [
+      "humidityDeltaPercent",
+      "minReportRateSeconds",
+      "ota_blocks_per_batch",
+      "probeTemperatureDelta",
+      "roomTemperatureDelta",
+      "timestamp"
+    ],
+    "tracking": [
+      "ambientOffset",
+      "remoteTTL",
+      "remoteTemperature",
+      "remoteTimestamp",
+      "timestamp",
+      "tracking",
+      "trackingFallback"
+    ],
+    "diagnostics": [
+      "bootCount",
+      "bootInfo",
+      "bootTime",
+      "encryptionEnabled",
+      "errorDetection",
+      "faultTest",
+      "freeHeap",
+      "freePsram",
+      "privKeyOk",
+      "pubKeyHash",
+      "secureBootEnabled",
+      "timestamp"
+    ],
+    "matter": [
+      "cd",
+      "commissioned",
+      "commissionedAt",
+      "commissioningWindowOpen",
+      "commissioning_params",
+      "dac",
+      "dacSalt",
+      "decommissionSource",
+      "decommissionedAt",
+      "fabricVendorIds",
+      "pai",
+      "product_info",
+      "provisioned",
+      "timestamp"
+    ],
+    "power": [
+      "current",
+      "dutyCycle",
+      "fault",
+      "timestamp",
+      "voltage",
+      "wattage"
+    ],
+    "bbConfig": [
+      "controlType",
+      "hysteresisBandHigh",
+      "hysteresisBandLow",
+      "hysteresisMinSwitchMinutes",
+      "pidFastDutyCycleLength",
+      "pidFastKd",
+      "pidFastKi",
+      "pidFastKp",
+      "pidFastMinOffTime",
+      "pidFastMinOnTime",
+      "pidSlowDutyCycleLength",
+      "pidSlowKd",
+      "pidSlowKi",
+      "pidSlowKp",
+      "pidSlowMinOffTime",
+      "pidSlowMinOnTime",
+      "timestamp"
+    ],
+    "cloudFeatures": [
+      "cloudEarlyOn"
+    ],
+    "drState": [
+      "inEvent",
+      "state"
+    ]
+  },
+  "account": {
+    "homes": {
+      "Homes": [
+        {
+          "Id": "id-57c49dd2",
+          "Name": "<name>",
+          "Address": "<redacted>",
+          "Owner": "<redacted>",
+          "AllowedUsers": "<redacted>",
+          "Zones": [],
+          "ERate": "0.0616"
+        }
+      ]
+    },
+    "schedules": {
+      "Schedules": [
+        {
+          "Device": "device-f0e5a675",
+          "ScheduledActions": {
+            "Monday": [],
+            "Thursday": [],
+            "Friday": [],
+            "Sunday": [],
+            "Wednesday": [],
+            "Tuesday": [],
+            "Saturday": []
+          }
+        },
+        {
+          "Device": "device-728d8928",
+          "ScheduledActions": {
+            "Monday": [],
+            "Thursday": [],
+            "Friday": [],
+            "Sunday": [],
+            "Wednesday": [],
+            "Tuesday": [],
+            "Saturday": []
+          }
+        }
+      ]
+    }
+  },
+  "review": []
+}

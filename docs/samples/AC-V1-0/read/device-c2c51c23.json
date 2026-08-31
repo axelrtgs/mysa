@@ -1,0 +1,442 @@
+{
+  "device": {
+    "AllowedUsers": "<redacted>",
+    "Animation": "off",
+    "Brand": {
+      "Brand": "FUJITSU",
+      "Id": 2492,
+      "remoteModelNumber": "",
+      "major": 0
+    },
+    "ButtonAVE": 16,
+    "ButtonDI": 8,
+    "ButtonLowPower": 0,
+    "ButtonPolling": 175,
+    "ButtonRepeatDelay": 20,
+    "ButtonRepeatStart": 44,
+    "ButtonState": "Locked",
+    "ButtonThreshold": 10,
+    "CodeNum": "671",
+    "Format": "celsius",
+    "HeaterType": "Baseboard",
+    "Home": "<redacted>",
+    "Id": "device-c2c51c23",
+    "IsThermostatic": true,
+    "LastPaired": 1698618728,
+    "MaxBrightness": 100,
+    "MaxCurrent": "0.000000",
+    "MaxSetpoint": 24,
+    "MinBrightness": 50,
+    "MinSetpoint": 19,
+    "Mode": {
+      "Id": 1
+    },
+    "Model": "AC-V1-0",
+    "Name": "<name>",
+    "Owner": "<redacted>",
+    "Schedule": "id-a6027072",
+    "SetupRequired": false,
+    "SupportedCaps": {
+      "modes": {
+        "2": {
+          "tempRanges": [
+            [
+              16,
+              30
+            ],
+            [
+              25,
+              25
+            ]
+          ]
+        },
+        "3": {
+          "tempRanges": [
+            [
+              25,
+              25
+            ]
+          ]
+        },
+        "4": {
+          "tempRanges": [
+            [
+              25,
+              25
+            ],
+            [
+              25,
+              25
+            ],
+            [
+              16,
+              30
+            ],
+            [
+              16,
+              30
+            ],
+            [
+              16,
+              30
+            ],
+            [
+              16,
+              30
+            ],
+            [
+              17,
+              30
+            ],
+            [
+              16,
+              29
+            ]
+          ]
+        },
+        "5": {
+          "tempRanges": [
+            [
+              25,
+              25
+            ]
+          ]
+        },
+        "6": {
+          "tempRanges": [
+            [
+              25,
+              25
+            ]
+          ]
+        },
+        "99": {
+          "tempRanges": [
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      "tempRange": [
+        16,
+        30
+      ],
+      "version": "1.1",
+      "keys": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        47
+      ],
+      "modifiedKeys": [
+        1,
+        2,
+        3,
+        7,
+        4,
+        6,
+        5,
+        11,
+        10,
+        9,
+        8,
+        47
+      ]
+    },
+    "TimeZone": "America/Toronto",
+    "Voltage": 240
+  },
+  "state": {
+    "data": {
+      "latestTelemetry": {
+        "isConnected": true,
+        "lastConnected": 1788162466,
+        "reading": {
+          "deviceId": "device-c2c51c23",
+          "timestamp": 1788162466,
+          "rawTemperature": 25.7,
+          "roomTemperature": 23.2,
+          "humidity": 45,
+          "coolSetpoint": 22,
+          "onTime": 30,
+          "freeHeap": 67460,
+          "rssi": -26,
+          "mode": 4,
+          "devicePower": 2,
+          "fan": 1,
+          "swing": 2,
+          "voltage": 240,
+          "maxCurrent": 0,
+          "powerConsumed": 0,
+          "effectiveSetpoint": 21,
+          "thermostatMode": 4,
+          "isInThermostaticMode": true,
+          "thermostaticOffset": -1,
+          "vaIsSteadyState": true,
+          "vaDirection": 2,
+          "vaDrift": 1,
+          "vaSteadyStateTemp": 23.3,
+          "vaRateOfChange": 0,
+          "vaRateOfRateOfChange": 0,
+          "delta": 2,
+          "source": 24,
+          "instantLoad": 0,
+          "timestampEstimated": true
+        }
+      },
+      "targetHeat": {
+        "desired": {
+          "timestamp": 1788161890,
+          "setpoint": 22
+        },
+        "reported": {
+          "timestamp": 1788161605,
+          "setpoint": 23,
+          "lockoutMax": 24,
+          "lockoutMin": 19
+        }
+      },
+      "targetCool": {
+        "desired": {
+          "timestamp": 1788158079,
+          "setpoint": 23
+        },
+        "reported": {
+          "timestamp": 1788162466,
+          "setpoint": 22
+        }
+      },
+      "targetAuto": {
+        "desired": {
+          "timestamp": 1788158084,
+          "setpoint": 23
+        },
+        "reported": {
+          "timestamp": 1788161590,
+          "setpoint": 23
+        }
+      },
+      "modes": {
+        "desired": {
+          "timestamp": 1788161724,
+          "mode": 3,
+          "fan_mode": 0,
+          "verticalSwingState": 2,
+          "horizontalSwingState": 2,
+          "verticalSwingToggle": 1,
+          "isThermostatic": 1
+        },
+        "reported": {
+          "timestamp": 1788162466,
+          "mode": 3,
+          "fan_mode": 0,
+          "verticalSwingState": 2,
+          "horizontalSwingState": 1,
+          "verticalSwingToggle": 1,
+          "unitPower": 2,
+          "isThermostatic": 1
+        }
+      },
+      "acConfig": {
+        "reported": {
+          "timestamp": 1788128923,
+          "codesetVersion": "1.1"
+        }
+      },
+      "identity": {
+        "reported": {
+          "timestamp": 1788153263,
+          "family": "AC",
+          "model": "AC-V1-0",
+          "fw": "3.17.5.9"
+        }
+      },
+      "physicalInterface": {
+        "desired": {
+          "timestamp": 1788161680,
+          "activeIntensity": 100,
+          "idleIntensity": 50,
+          "lockout": 3,
+          "format": "C"
+        },
+        "reported": {
+          "timestamp": 1788161681,
+          "activeIntensity": 100,
+          "idleIntensity": 50,
+          "lockout": 3,
+          "format": "C"
+        }
+      },
+      "diagnostics": {
+        "reported": {
+          "timestamp": 1788162466,
+          "freeHeap": 67460
+        }
+      },
+      "schedule": {
+        "resolved": true,
+        "holding": true
+      },
+      "drState": {
+        "inEvent": false,
+        "state": "none"
+      }
+    }
+  },
+  "capabilities": {
+    "error": "/capabilities/device-c2c51c23 returned 404: {\"message\":\"Device device-c2c51c23 capabilities not available for this app version\"}"
+  },
+  "update_available": {
+    "update": false,
+    "installedVersion": "3.17.5.9",
+    "allowedVersion": "3.17.5.9"
+  },
+  "sections": {
+    "latestTelemetry": [
+      "isConnected",
+      "lastConnected",
+      "reading"
+    ],
+    "latestTelemetry.reading": [
+      "coolSetpoint",
+      "delta",
+      "deviceId",
+      "devicePower",
+      "effectiveSetpoint",
+      "fan",
+      "freeHeap",
+      "humidity",
+      "instantLoad",
+      "isInThermostaticMode",
+      "maxCurrent",
+      "mode",
+      "onTime",
+      "powerConsumed",
+      "rawTemperature",
+      "roomTemperature",
+      "rssi",
+      "source",
+      "swing",
+      "thermostatMode",
+      "thermostaticOffset",
+      "timestamp",
+      "timestampEstimated",
+      "vaDirection",
+      "vaDrift",
+      "vaIsSteadyState",
+      "vaRateOfChange",
+      "vaRateOfRateOfChange",
+      "vaSteadyStateTemp",
+      "voltage"
+    ],
+    "targetHeat": [
+      "lockoutMax",
+      "lockoutMin",
+      "setpoint",
+      "timestamp"
+    ],
+    "targetCool": [
+      "setpoint",
+      "timestamp"
+    ],
+    "targetAuto": [
+      "setpoint",
+      "timestamp"
+    ],
+    "modes": [
+      "fan_mode",
+      "horizontalSwingState",
+      "isThermostatic",
+      "mode",
+      "timestamp",
+      "unitPower",
+      "verticalSwingState",
+      "verticalSwingToggle"
+    ],
+    "acConfig": [
+      "codesetVersion",
+      "timestamp"
+    ],
+    "identity": [
+      "family",
+      "fw",
+      "model",
+      "timestamp"
+    ],
+    "physicalInterface": [
+      "activeIntensity",
+      "format",
+      "idleIntensity",
+      "lockout",
+      "timestamp"
+    ],
+    "diagnostics": [
+      "freeHeap",
+      "timestamp"
+    ],
+    "schedule": [
+      "holding",
+      "resolved"
+    ],
+    "drState": [
+      "inEvent",
+      "state"
+    ]
+  },
+  "account": {
+    "homes": {
+      "Homes": [
+        {
+          "Id": "id-57c49dd2",
+          "Name": "<name>",
+          "Address": "<redacted>",
+          "Owner": "<redacted>",
+          "AllowedUsers": "<redacted>",
+          "Zones": [],
+          "ERate": "0.0616"
+        }
+      ]
+    },
+    "schedules": {
+      "Schedules": [
+        {
+          "Device": "device-f0e5a675",
+          "ScheduledActions": {
+            "Monday": [],
+            "Thursday": [],
+            "Friday": [],
+            "Sunday": [],
+            "Wednesday": [],
+            "Tuesday": [],
+            "Saturday": []
+          }
+        },
+        {
+          "Device": "device-728d8928",
+          "ScheduledActions": {
+            "Monday": [],
+            "Thursday": [],
+            "Friday": [],
+            "Sunday": [],
+            "Wednesday": [],
+            "Tuesday": [],
+            "Saturday": []
+          }
+        }
+      ]
+    }
+  },
+  "review": []
+}
