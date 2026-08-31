@@ -98,6 +98,7 @@ next `refresh()`. Identity is stable, so a caller may hold it.
 | semantic properties | spec 02 field maps, resolved against the cache |
 | `set_*()` | writes, below |
 | `setpoint_range` | the bounds a setpoint write must fall inside, for the section the mode selects |
+| `declared_setpoint_range` | step 2 alone: the range the device declares, before a lockout pair narrows it |
 | `setpoint_step` | the resolution a setpoint is accepted at |
 | `firmware_update` | update availability, after `refresh_firmware()` |
 | `raw` | the device's own `/state/batch` document, for a caller that needs a field the SDK does not name |
@@ -126,6 +127,10 @@ different question - what a write may contain - and resolves in order:
 2. the range the device declares: `climateControl.heat.setpoint` in the capability
    document, or `SupportedCaps.tempRange` on an AC unit;
 3. `None`, where neither is served.
+
+`declared_setpoint_range` is step 2 on its own, for a caller bounding the lockout pair
+itself: moving `lockoutMin` needs the range the hardware accepts, not the limit it is
+about to replace.
 
 It follows the mode for the same reason `set_temperature` does (spec 03): the bounds are
 a property of the section being written, and an AC unit's `targetCool` carries no lockout

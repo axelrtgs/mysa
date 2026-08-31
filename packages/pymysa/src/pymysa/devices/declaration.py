@@ -74,6 +74,16 @@ class Declaration:
             return None
         return self._lockout_range(source.section) or self._declared_range(source)
 
+    @property
+    def declared_setpoint_range(self) -> tuple[float, float] | None:
+        """The range the device declares, before a lockout pair narrows it.
+
+        What bounds the lockout pair itself: a caller moving `lockoutMin` needs the
+        hardware's range and not the limit it is about to replace.
+        """
+        source = self._source(self.active_setpoint)
+        return self._declared_range(source) if source is not None else None
+
     def _lockout_range(self, section: str) -> tuple[float, float] | None:
         """The user-set limit the section reports, where it reports one."""
         low = _measure(self._reported(section, LOCKOUT[0]))
