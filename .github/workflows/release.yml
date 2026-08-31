@@ -18,20 +18,37 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          # tomllib, and the interpreter that builds the wheel. Not the runner's default.
+          python-version: "3.13"
 
-      # HACS offers the five latest releases in its version picker and installs the
-      # repository at that tag, while Home Assistant reports the manifest's own version.
-      # A tag that disagrees with the manifest gives the two different answers.
-      - name: The manifest version must be the tag
+      # Three things have to agree, because the release is what ties them together:
+      # HACS installs the repository at the tag, Home Assistant reports the manifest's
+      # version, and the manifest's requirement names a wheel this release publishes.
+      - name: The manifest must describe the tag it is released as
         run: |
           tag="${GITHUB_REF_NAME#v}"
-          manifest=$(python3 -c "import json; print(json.load(open('custom_components/mysa/manifest.json'))['version'])")
-          if [ "$tag" != "$manifest" ]; then
-            echo "tag is $tag, manifest says $manifest" >&2
-            exit 1
-          fi
+          read_json() { python3 -c "import json,sys; print(json.load(open(sys.argv[1]))$2)" "$1"; }
+
+          manifest=$(read_json custom_components/mysa/manifest.json "['version']")
+          requirement=$(read_json custom_components/mysa/manifest.json "['requirements'][0]")
+          sdk=$(python3 -c "import tomllib; print(tomllib.load(open('packages/pymysa/pyproject.toml','rb'))['project']['version'])")
+          expected="pymysa@https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/pymysa-${tag}-py3-none-any.whl"
+
+          fail() { echo "$1" >&2; exit 1; }
+          [ "$tag" = "$manifest" ] || fail "tag is $tag, the manifest says $manifest"
+          [ "$tag" = "$sdk" ] || fail "tag is $tag, pymysa says $sdk"
+          [ "$requirement" = "$expected" ] || fail "the requirement is $requirement, not $expected"
+
+      - name: Build the SDK wheel
+        run: |
+          python3 -m pip install --quiet build
+          python3 -m build --wheel --outdir dist packages/pymysa
 
       - name: Publish
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" --verify-tag --generate-notes
+        run: |
+          gh release create "$GITHUB_REF_NAME" --verify-tag --generate-notes \
+            dist/pymysa-*-py3-none-any.whl

@@ -1,12 +1,16 @@
 {
   "domain": "mysa",
   "name": "Mysa",
-  "codeowners": ["@axelrtgs"],
+  "codeowners": [
+    "@axelrtgs"
+  ],
   "config_flow": true,
   "documentation": "https://github.com/axelrtgs/mysa/blob/main/README.md",
   "integration_type": "hub",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/axelrtgs/mysa/issues",
-  "requirements": ["pymysa==0.1.0"],
+  "requirements": [
+    "pymysa@https://github.com/axelrtgs/mysa/releases/download/v0.1.0/pymysa-0.1.0-py3-none-any.whl"
+  ],
   "version": "0.1.0"
 }
