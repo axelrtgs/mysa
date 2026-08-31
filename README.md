@@ -58,8 +58,21 @@ Untested models are built from the same field maps and declarations as the rest.
 unrecognised field resolves to unavailable rather than to a wrong value, so an untested
 model is incomplete rather than misleading.
 
-**If you own one**, `pymysa-debug inspect` reports what it sends and `process` redacts the
-capture for a pull request. That is what moves a model to verified.
+**If you own one**, three commands are what move a model to verified:
+
+```
+pymysa-debug inspect     # what the device reports
+pymysa-debug exercise    # what it accepts: writes each setting, reads it back, restores it
+pymysa-debug process     # redact both captures for a pull request
+```
+
+`inspect` alone is enough to describe a model and is read-only. `exercise` is the half
+that settles what a device will actually take - a field being present says nothing about
+whether a write to it lands - and it does write to your thermostat, one setting at a
+time, putting each back afterwards. It reports anything it could not restore.
+
+Raw captures carry device ids, serials and names and stay on your machine; `process`
+redacts them into `docs/samples/`, and that is what a pull request carries.
 
 ## Known limits
 
