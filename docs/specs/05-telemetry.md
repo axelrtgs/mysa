@@ -2,11 +2,35 @@
 
 ## Extraction
 
-A value is read through the device's `FIELDS` map. Keys listed in `WRAPPED_FIELDS` are
-unwrapped from `{"v": value, "t": timestamp}`; all others are read directly. A key absent
-from the payload yields `None`.
+A value is read through the device's `FIELDS` map, which names a section and a key
+(spec 02). A key absent from the document yields `None`.
 
 `None` propagates to the entity as unavailable. No default is substituted.
+
+A field that resolves to `None` is logged once per device at the severity of its
+criticality (spec 02): `critical` at error, `important` at warning, `informational` at
+debug. The entity is unavailable in every case; the severity distinguishes a broken
+thermostat from a missing convenience.
+
+## Reading fields `[observed]`
+
+`latestTelemetry.reading` is the device's own last report.
+
+| field | models |
+|---|---|
+| `roomTemperature`, `rawTemperature`, `humidity`, `mode`, `heatSetpoint` | all |
+| `coreTemperature`, `dutyCycle`, `onTime`, `powerConsumed`, `current` | BB-V1, BB-V3 |
+| `energy`, `secondaryRawTemperature`, `configuredTracking`, `remoteTemperature` | BB-V3 |
+| `instantLoad`, `maxCurrent`, `voltage`, `wattage`, `freeHeap`, `rssi` | BB-V1 |
+| `coolSetpoint`, `fan`, `swing`, `devicePower`, `effectiveSetpoint` | AC-V1 |
+| `thermostatMode`, `isInThermostaticMode`, `thermostaticOffset`, `delta`, `source` | AC-V1 |
+| `vaDirection`, `vaDrift`, `vaIsSteadyState`, `vaRateOfChange`, `vaSteadyStateTemp` | AC-V1 |
+
+`reading.timestamp` supplies the staleness timestamp.
+
+Every observed reading carries `timestampEstimated: true`. What the flag qualifies is
+not established. Until it is, `energy` and `powerConsumed` are exposed as reported by
+the device and no value is derived from them.
 
 ## Power and energy
 
@@ -19,8 +43,8 @@ power_w = voltage * current
 Duty cycle is a separate diagnostic percentage and is not a factor in instantaneous
 power.
 
-Where a device reports `energy` or `powerConsumed` directly, the device value is used in
-preference to any derivation.
+Where a device reports `energy`, `wattage` or `powerConsumed` directly, the device value
+is used in preference to any derivation.
 
 Devices that do not report current expose no power or energy entities.
 
@@ -28,7 +52,7 @@ Devices that do not report current expose no power or energy entities.
 |---|---|---|
 | BB-V1 | yes `[observed]` | yes |
 | BB-V3 | yes `[observed]` | yes |
-| BB-V2 | yes `[mit-sdk]` | yes |
+| BB-V2 | unknown | on report |
 | AC-V1 | no `[observed]` | no |
 | BB-V2-L | no `[inferred]` | no |
 | ST-V1 | no `[inferred]` | no |
@@ -45,5 +69,4 @@ sensor is created; energy is supplied to Home Assistant, which applies its own r
 Enabled by default where reported: signal strength, duty cycle, current, voltage,
 firmware, connection state.
 
-Disabled by default: free heap, free PSRAM, boot count, boot time, timezone, fault test,
-secure boot and encryption flags.
+Disabled by default: free heap, boot count, PID constants, fault flags.

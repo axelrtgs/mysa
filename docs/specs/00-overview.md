@@ -11,12 +11,20 @@
 
 | layer | responsibility |
 |---|---|
-| transport | REST calls, MQTT connection, reconnection, credential refresh |
-| protocol | envelope construction and parsing |
-| device | field mapping, value extraction, capability declaration, command encoding |
+| transport | HTTP calls, authentication, session renewal |
+| state | parsing the state document into sections and fields |
+| device | field mapping, capability declaration, write construction |
 | integration | Home Assistant entities and coordination |
 
 Model-specific behaviour exists only in device classes. No other layer branches on model.
+
+## Transport
+
+The cloud REST API is the only transport. It carries every field every model reports and
+accepts every write, and its state document has the same shape for all models.
+
+Devices also publish on an MQTT topic. That surface covers a subset of models, carries a
+subset of the fields, and is not used.
 
 ## Data rules
 

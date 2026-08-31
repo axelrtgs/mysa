@@ -10,5 +10,4 @@ Protocol facts are tagged in the specs by source:
 | tag | meaning |
 |---|---|
 | `[observed]` | captured from hardware, sample in `docs/samples/` |
-| `[mit-sdk]` | documented in `bourquep/mysa-js-sdk` (MIT), attributed in `NOTICE.md` |
 | `[inferred]` | deduced from behaviour, not yet confirmed against a device |

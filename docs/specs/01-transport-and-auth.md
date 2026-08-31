@@ -1,57 +1,78 @@
 # 01 — Transport and authentication
 
-## Authentication `[mit-sdk]`
-
-AWS Cognito user pool authentication, followed by identity pool credentials for AWS IoT.
+## Cognito `[observed]`
 
 | constant | value |
 |---|---|
 | region | `us-east-1` |
 | user pool id | `us-east-1_GUFWfhI7g` |
 | client id | `19efs8tgqe942atbqmot5m36t3` |
-| identity pool id | `us-east-1:ebd95d52-9995-45da-b059-56b865a18379` |
-| login key | `cognito-idp.us-east-1.amazonaws.com/us-east-1_GUFWfhI7g` |
 
-Libraries: `pycognito` (user pool), `boto3` (identity pool credentials), `awsiotsdk`
-(AWS IoT MQTT). All three are synchronous and are called through an executor.
+The app client permits two auth flows:
 
-Sessions expire and are refreshed from the refresh token. Refresh failure raises an
-authentication error which the integration surfaces as reauth.
-
-## REST `[mit-sdk]`
-
-| call | returns |
+| flow | result |
 |---|---|
-| `get_devices` | device records: `Model`, `SupportedCaps`, configuration fields |
-| `get_device_states` | current state for all devices |
-| `get_device_serial_number` | serial for one device |
-| `get_device_firmwares` | available firmware versions |
-| `get_homes` | home and grouping metadata |
+| `USER_SRP_AUTH` | accepted |
+| `REFRESH_TOKEN_AUTH` | accepted |
+| `USER_PASSWORD_AUTH` | `InvalidParameterException: USER_PASSWORD_AUTH flow not enabled for this client` |
 
-## MQTT `[mit-sdk]`
+Login therefore requires the SRP handshake and is performed by `pycognito`, imported at
+that call and nowhere else. The client has no secret, so no `SECRET_HASH` is sent.
 
-AWS IoT over WebSocket, SigV4-signed with identity pool credentials.
+Renewal is a plain HTTP call and uses no SDK:
 
-- Credentials carry an expiry; the connection refreshes and reconnects before it passes.
-- Reconnection uses bounded exponential backoff.
-- Subscriptions are per device and are re-established after reconnect.
+```
+POST https://cognito-idp.us-east-1.amazonaws.com/
+Content-Type: application/x-amz-json-1.1
+X-Amz-Target: AWSCognitoIdentityProviderService.InitiateAuth
 
-### Inbound message types
+{"AuthFlow":"REFRESH_TOKEN_AUTH","ClientId":"<client id>",
+ "AuthParameters":{"REFRESH_TOKEN":"<token>"}}
+```
 
-`DeviceV1Status`, `DeviceV2Status`, `DeviceAcStatus`, `DeviceStateChange`,
-`DeviceSetpointChange`, `DevicePostBoot`, `DeviceLog`.
+The response carries `AuthenticationResult` with `IdToken`, `AccessToken` and
+`ExpiresIn`. It carries no `RefreshToken`; the existing one remains in use.
 
-No V3 status type is defined upstream. BB-V3 status parsing is defined in spec 02 from
-`[observed]` payloads.
+A failed renewal raises an authentication error, which the integration surfaces as
+reauth. A session is renewed once it is within 300 s of expiry.
 
-### Outbound message types
+## Host `[observed]`
 
-`ChangeDeviceState`. Envelope in spec 03.
+`https://mysa-backend.mysa.cloud` serves every call.
+
+`https://app-prod.mysa.cloud` is an older host still serving `/devices/firmware`. The
+installed firmware version is in the state document (`identity.reported.fw`), so the
+legacy host is not read.
+
+## Headers `[observed]`
+
+| header | value |
+|---|---|
+| `authorization` | the Cognito id token, unprefixed |
+| `user-agent` | `okhttp/4.11.0` |
+
+A request rejected with 401 or 403 raises an authentication error.
+
+## Endpoints `[observed]`
+
+| call | method | path | returns |
+|---|---|---|---|
+| devices | GET | `/devices` | `DevicesObj`, keyed by device id |
+| state | POST | `/state/batch` | state document per device, keyed by device id |
+| capabilities | GET | `/capabilities/{device_id}` | capability declaration |
+| write | POST | `/state/{device_id}/update` | acknowledgement; see spec 03 |
+| homes | GET | `/homes` | home and grouping metadata |
+| update | GET | `/devices/update_available/{device_id}` | firmware update availability `[inferred]` |
+| schedules | GET | `/schedules` | schedule definitions `[observed]` |
+| home | GET | `/homes/{home_id}` | one home `[inferred]` |
+| users | GET | `/users` | account record `[inferred]` |
+
+`/state/batch` takes `{"deviceIds": ["<id>", ...]}` and returns every device in one call.
 
 ## Polling
 
-MQTT is the primary source. HTTP polling at a configurable interval (default 120 s) is
-the fallback.
+One `/state/batch` call covers the account. State is polled at a configurable interval;
+default 30 s.
 
 Values carry timestamps. A value is accepted only when its timestamp is newer than the
 currently held value for that field.

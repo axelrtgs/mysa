@@ -1,10 +1,19 @@
 # Notices
 
+No source from another project is used. This file records where a protocol fact was
+first documented elsewhere.
+
+## dlenski/mysotherm — GPL-3.0
+
+The weekly schedule event encoding described in `docs/specs/08-schedules.md` is recorded
+in that project's protocol notes. The field layout is a protocol fact, documented here in
+this project's own words. No text or code is taken from it, and this project is not a
+derivative work of it.
+
 ## bourquep/mysa-js-sdk — MIT
 
-Authentication endpoints, AWS Cognito identifiers, the MQTT envelope structure and the
-mode/fan encodings documented in `docs/specs/01-transport-and-auth.md` and
-`docs/specs/03-commands.md` are documented in the Mysa JavaScript SDK.
+The AWS Cognito user pool and client identifiers in
+`docs/specs/01-transport-and-auth.md` are documented in the Mysa JavaScript SDK.
 
 ```
 MIT License

@@ -14,7 +14,7 @@ Status: specification. See `docs/specs/`.
 | model | status |
 |---|---|
 | BB-V1 | verified |
-| BB-V3 | verified for reads; write command type not yet captured |
+| BB-V3 | verified |
 | AC-V1 | verified |
 | BB-V2 | untested |
 | BB-V2 Lite | untested; reports no current, so no power or energy entities |
@@ -24,18 +24,22 @@ Status: specification. See `docs/specs/`.
 Untested models are implemented from documented protocol facts. An unrecognised field
 resolves to unavailable rather than to a wrong value.
 
-**If you own an untested model**, run the debug harness and send the capture; that is
+**If you own an untested model**, run the debug harness and send the samples; that is
 what moves a model to verified.
 
 ```
-python -m pymysa.debug capture --script full
+pymysa-debug inspect     # what the device reports
+pymysa-debug exercise    # what it accepts; writes each setting and puts it back
+pymysa-debug process     # redact the captures for a pull request
 ```
 
-The harness redacts account and device identifiers before writing. See
+Raw captures stay local. `process` redacts them into `docs/samples/`. See
 [`docs/specs/07-debug-harness.md`](docs/specs/07-debug-harness.md).
 
 ## Design
 
+- Devices are read and written through the cloud REST API. It covers every model and
+  every field; the MQTT surface devices also publish on does not, and is not used.
 - Power and energy come from measured current and voltage. Nothing is estimated.
 - Values the device does not report are unavailable, never defaulted.
 - Model-specific behaviour lives in device classes; nothing else branches on model.
