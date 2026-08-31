@@ -70,12 +70,17 @@ absent. `[observed]`
 | `identity`, `latestTelemetry`, `modes`, `physicalInterface`, `drState`, `diagnostics` | yes | yes | yes |
 | `targetHeat` | yes | yes | yes |
 | `bbConfig`, `power` | yes | yes | no |
-| `targetCool`, `schedule` | no | no | yes |
+| `targetCool`, `targetAuto` | no | no | yes |
 | `matter`, `tracking`, `cloudFeatures`, `telemetry` | no | yes | no |
-| `targetAuto`, `acConfig` | no | no | one of two units |
+| `acConfig` | no | no | one of two units |
+| `schedule` | one of two units | no | yes |
 
-Two AC-V1-0 units on the same account differ: one returns `acConfig` and `targetAuto`,
-the other does not. Section presence is per unit, not per model.
+Two AC-V1-0 units on the same account differ: one returns `acConfig` and the other does
+not. Section presence is per unit, not per model.
+
+`schedule` is per unit for a different reason: it exists while a schedule is assigned to
+the device and not otherwise (spec 08). One of the two BB-V1-0 units carries it and the
+other does not, on the same firmware. Nothing about the model decides it.
 
 ## Device contract
 
@@ -298,6 +303,20 @@ Anything that confirms a write by reading it back will report it as never applie
 A BB-V3-0 accepts `intensityMode` 0, 1, 2 and 3. Only 0 (fixed) and 1 (adaptive) are
 named, from watching the app; 2 and 3 are values the device takes and nothing has been
 seen to select.
+
+## Electrical units
+
+`power.voltage` is volts and `power.wattage` is watts. `power.current` is milliamps: a
+BB-V3-0 reporting `{"voltage": 240, "current": 12458, "wattage": 2989}` is consistent
+only at that scale, since 12.458 A at 240 V is 2990 W. `[inferred]`
+
+Both BB-V1-0 captures report `current` and `wattage` as 0, so nothing fixes the scale on
+that model. It is read as milliamps because the section has the same shape and no capture
+contradicts it, not because it has been seen.
+
+`latestTelemetry.reading.energy` and `powerConsumed` have no established unit: every
+capture reports 0 for both. What the integration declares for them, and why, is in
+spec 05.
 
 ## Value shapes
 

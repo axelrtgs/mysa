@@ -1,70 +1,220 @@
 # 06 — Home Assistant entities
 
 The integration reads values and capabilities from `pymysa` device objects. It contains
-no protocol code and does not branch on model.
+no protocol code and does not branch on model: where it needs to know something about a
+device, the SDK is what tells it (spec 00).
 
-## Platforms
+## Setup
+
+One config entry is one Mysa account. Setup restores the stored session, applies the
+stored home selection with `account.limit_to()`, calls `discover()` once, then hands the
+account to a single `DataUpdateCoordinator` that calls `await account.refresh()` on the
+polling interval. The SDK owns no timer; the coordinator is the only clock (spec 09).
+
+A device in a home the entry does not include is neither created nor polled, because
+`limit_to` runs before discovery and `refresh()` reads only what discovery kept.
+
+| setting | default | where |
+|---|---|---|
+| polling interval | 60 seconds | options |
+| homes | every home | options; the config flow asks where there is more than one |
+
+`refresh_firmware()` runs at setup and then at most once every 24 hours, from inside the
+coordinator's update. It costs one request per device (spec 09), and what it answers
+changes on the backend's schedule rather than the account's; polling it every minute
+would be a request per device per minute for a value that moves a few times a year.
+
+## Entities
+
+An entity exists where the device declares the capability behind it, or - for a
+measurement, which is not a capability - where the device reports the value at setup. A
+value that is `None` at setup creates nothing; a value that becomes `None` later makes
+its entity unavailable (spec 05). The two rules differ because a capability is a
+statement about the device and a reading is a statement about one poll.
+
+An option list narrows this further: a capability whose `options()` is empty or single
+creates no entity, because a control with one option is not a control (spec 09).
 
 | platform | entity | condition |
 |---|---|---|
 | `climate` | thermostat | always |
-| `sensor` | temperature, humidity | always |
-| `sensor` | power, energy, current, voltage, duty cycle | `Capability.CURRENT` |
-| `select` | fan speed, vertical swing | matching capability |
-| `sensor` | signal strength | reported |
+| `sensor` | temperature, humidity | the value is reported |
+| `sensor` | current, voltage, power, duty cycle, energy, power consumed | each on its own value |
+| `sensor` | signal strength | the value is reported |
 | `sensor` | electricity rate | the device's home carries `ERate` (spec 02) |
+| `sensor` | next schedule event | the device carries a `schedule` section |
 | `binary_sensor` | connectivity | always |
-| `select` | horizontal swing | `Capability.HORIZONTAL_SWING` |
+| `binary_sensor` | firmware update available | `refresh_firmware()` read an answer |
+| `select` | keypad lock | `Capability.LOCK` |
 | `select` | temperature format | `Capability.TEMPERATURE_FORMAT` |
-| `select` | sensor mode | `Capability.SENSOR_MODE` |
-| `number` | active/idle brightness, setpoint min/max | `Capability.BRIGHTNESS`, `Capability.SETPOINT_LIMITS` |
-| `switch` | lock, proximity | matching capability |
-| `update` | firmware | always |
+| `switch` | proximity wake | `Capability.PROXIMITY` |
+| `number` | active brightness, idle brightness | `Capability.BRIGHTNESS` |
+| `number` | setpoint minimum, setpoint maximum | `Capability.SETPOINT_LIMITS` |
+| `button` | release schedule hold | the device carries a `schedule` section |
+
+Fan speed, vertical swing and horizontal swing are properties of the climate entity, not
+separate selects: Home Assistant's climate entity carries all three, and a second entity
+for the same control would be a second thing to keep in step with the first.
+
+### Identity
+
+`unique_id` is the Mysa device id for the climate entity, and `<device id>-<key>` for
+every other entity, where `key` is the name in the tables below. The scheme is fixed:
+changing it later would strand every entity a user already has, because Home Assistant
+matches on `unique_id` and creates a fresh entity for one it has not seen.
+
+`has_entity_name` is set. Entity names are per-entity; the device name comes from the
+device registry, whose entry carries the Mysa device id as its identifier, the model,
+the firmware as `sw_version` and the serial where the model reports one.
+
+An entity is available when the last coordinator update succeeded, the device reports
+itself connected, and its own value is not `None`.
 
 ## Climate
 
 | property | source |
 |---|---|
-| `hvac_modes` | capability discovery; always contains the reported mode |
-| `fan_modes` | capability discovery |
-| `swing_modes` | capability discovery |
-| `current_temperature` | `current_temperature` field |
-| `target_temperature` | `target_temperature` field |
-| `current_humidity` | `humidity` field |
-| `min_temp` / `max_temp` | `tempRange`, or the section's `lockoutMin` / `lockoutMax` |
+| `hvac_modes` | `device.modes`, mapped to `HVACMode`; always contains the reported mode |
+| `hvac_mode` | `device.mode`, or `None` where the reported value has no established name |
+| `fan_modes` | `device.options(Capability.FAN)` |
+| `swing_modes` | `device.options(Capability.VERTICAL_SWING)` |
+| `swing_horizontal_modes` | `device.options(Capability.HORIZONTAL_SWING)` |
+| `current_temperature` | `device.current_temperature` |
+| `target_temperature` | `device.target_temperature` |
+| `current_humidity` | `device.humidity` |
+| `min_temp` / `max_temp` | `device.setpoint_range` (spec 09) |
+| `target_temperature_step` | `device.setpoint_step` |
 
-Feature flags are computed from the declared capability set. A flag is set only when its
-option list is non-empty.
+`temperature_unit` is always Celsius. `physicalInterface.format` is what the device's own
+display shows and does not change what the protocol carries (spec 02); it is a select,
+not the entity's unit.
 
-## Scheduling
+Mysa modes map to Home Assistant's by name: `off`, `auto`, `cool`, `heat`, `fan only`
+and `dry` become `off`, `auto`, `cool`, `heat`, `fan_only` and `dry`. A mode value with
+no established name (spec 02) is not offered and reads as no mode rather than as `off`.
 
-`schedule.holding`, `schedule.resolved` and `schedule.nextEvent` report whether a
-schedule is in force and when it next acts (spec 08). The section exists only while a
-schedule is assigned.
+Feature flags follow the declared set: `TARGET_TEMPERATURE` where the device carries a
+setpoint, `FAN_MODE`, `SWING_MODE` and `SWING_HORIZONTAL_MODE` where the matching
+capability resolves to two or more options, and `TURN_ON` / `TURN_OFF` where the mode
+list contains `off` and at least one other mode.
 
-Home Assistant models scheduling through its own helpers rather than a device entity, so
-the integration exposes the hold state as a switch where the device reports it, and the
-next event as a timestamp sensor. Schedule definitions are not exposed: their shape is
-not established.
+## Sensors
 
-## Identity
+| key | source | unit | class |
+|---|---|---|---|
+| `temperature` | `current_temperature` | °C | temperature, measurement |
+| `humidity` | `humidity` | % | humidity, measurement |
+| `current` | `current` | mA | current, measurement |
+| `voltage` | `voltage` | V | voltage, measurement |
+| `power` | `wattage` | W | power, measurement |
+| `duty_cycle` | `duty_cycle` | % | measurement, diagnostic |
+| `energy` | `energy` | kWh | energy, total increasing |
+| `power_consumed` | `power_consumed` | none | measurement, diagnostic |
+| `signal_strength` | `signal_strength` | dBm | signal strength, measurement, diagnostic |
+| `electricity_rate` | the home's `ERate` | none | diagnostic |
+| `schedule_next_event` | `device.schedule.next_event` | | timestamp, diagnostic |
 
-- `unique_id` is the Mysa device id.
-- `has_entity_name` is set; entity names are per-entity and the device name comes from
-  the device registry.
+`energy` is declared as kilowatt hours on evidence that does not exist yet, which is
+what puts it on the energy dashboard; `power_consumed` is declared with no unit for the
+same absence of evidence. Spec 05 records why the two differ and what settles it.
+
+`electricity_rate` carries no currency: the payload serves a bare number and names no
+currency anywhere (spec 02). It is a diagnostic value, and no cost is derived from it -
+Home Assistant applies its own rate to the energy the integration supplies.
+
+## Binary sensors
+
+| key | source | class |
+|---|---|---|
+| `connected` | `device.available` | connectivity |
+| `firmware_update` | `device.firmware_update.available` | update, diagnostic, disabled by default |
+
+The firmware entity reports and does not install. No install path has been observed on
+any surface this project reads, so an `update` entity would be one whose only button
+does nothing; the reported answer is a diagnostic and is disabled until asked for.
+
+## Selects, switches and numbers
+
+| platform | key | source | writes |
+|---|---|---|---|
+| `select` | `lock` | `device.lock` | `set_lock(option)` |
+| `select` | `temperature_format` | `device.temperature_format` | `set_temperature_format(option)` |
+| `switch` | `proximity` | `device.proximity` | `set_proximity(bool)` |
+| `number` | `active_brightness` | `device.active_brightness` | `set_brightness(active=...)` |
+| `number` | `idle_brightness` | `device.idle_brightness` | `set_brightness(idle=...)` |
+| `number` | `min_setpoint` | `device.min_setpoint` | `set_setpoint_limits(low, high)` |
+| `number` | `max_setpoint` | `device.max_setpoint` | `set_setpoint_limits(low, high)` |
+
+Keypad lock is a select and not a switch: it holds three values on a BB-V3-0 - unlocked,
+limited to the lockout range, and full - and a switch cannot say which of the two locked
+states is in force (spec 02).
+
+Brightness is 0-100. The setpoint limits are whole degrees bounded by `setpoint_range`,
+and each writes the pair, because `set_setpoint_limits` takes both: the entity being
+moved supplies its new value and the other supplies its current one.
+
+## The schedule hold
+
+A hold is released and not created: writing `holding: false` ends one, and nothing
+observed starts one, because whatever creates a hold carries the setting being held and
+the state document does not (spec 08).
+
+So the hold is a `button` that releases, alongside a timestamp sensor for the next event
+- not a switch. A switch would offer a control whose other half cannot work.
+
+Schedule definitions are not exposed. Their shape is not established: every capture's day
+lists are empty (spec 08).
+
+## Writes
+
+A setter returns as soon as the backend accepts it, with the written value already
+readable from the device object (spec 09). The entity writes its state at that point and
+asks the coordinator for a refresh, so the user sees the new value immediately and the
+next poll replaces it with what the device reports.
+
+Confirmation runs in the SDK. If a write never lands, the SDK drops the pending value and
+calls `on_write_failed`; the integration passes that callback when it constructs the
+account, and the callback updates every entity on the coordinator, so the value in the UI
+snaps back to what the device actually holds. It is logged as a warning naming the device
+and the field: an accepted-and-ignored write is a real event and silence would leave the
+user believing a control works.
+
+| refusal | surfaces as |
+|---|---|
+| `ValueRefused` | `ServiceValidationError` - the value was wrong |
+| `UnsupportedCommand` | `HomeAssistantError` - the device does not have the feature |
+| accepted, never applied | the callback above; no exception |
+
+## Missing fields
+
+At setup, each device's critical fields (spec 02: `current_temperature`,
+`target_temperature`, `mode`, `connected`) are checked, and any that resolve to `None`
+are logged once at error with the device and the model. A thermostat that cannot report
+its target temperature is broken whatever it is, and an integration that shows an
+unavailable entity without saying why sends the user looking at their network.
 
 ## Config flow
 
-- Username and password authenticate against Cognito by SRP, once. The refresh token
-  is stored in the config entry and renews the session thereafter; the password is
-  stored only when the user enables silent reauthentication.
+- Username and password authenticate against Cognito by SRP, once. The refresh token is
+  stored in the config entry and renews the session thereafter. The password is stored
+  only when the user asks for it, and only to reauthenticate without being prompted.
+- The account's unique id is the username, so one account cannot be set up twice.
 - Where the account holds more than one home, a second step lists them and asks which to
-  set up, defaulting to all. The chosen ids are stored in the config entry and passed to
-  `MysaAccount.limit_to` on every start, so an excluded device is neither created as an
-  entity nor polled. An account with one home skips the step.
-- Changing the selection in options reruns discovery: devices in a home that is no longer
-  chosen are removed, and devices in a newly chosen one are added.
-- `async_step_reauth` handles token failure.
-- Options: polling interval.
-- One `DataUpdateCoordinator` per account, polling `/state/batch`. A write refreshes the
-  coordinator once the value is confirmed.
+  set up, defaulting to all. `list_homes()` is one request and discovers nothing, so the
+  question is asked before anything is discovered rather than after (spec 09). An account
+  with one home skips the step.
+- Options carry the home selection and the polling interval. Changing either reloads the
+  entry, which reruns discovery: devices in a home that is no longer chosen are removed
+  and devices in a newly chosen one are added.
+- `async_step_reauth` handles a session that cannot be renewed, and asks for the password
+  again unless one is stored.
+
+## Not exposed
+
+| what | why |
+|---|---|
+| sensor mode | `tracking.tracking` holds numbers and its declared names, `internal` and `remote`, are tied to none of them; a selector built from it would refuse every selection (spec 09) |
+| heater type, brightness mode, early-on, ambient offset, tracking mode | informational (spec 02): read and mapped, not surfaced |
+| `hvac_action` | nothing reports whether the element is on now. Duty cycle is an average over the device's reporting interval, and reading it as an instantaneous state is an inference, not a measurement |
+| schedule definitions | not established (spec 08) |
+| smart alerts | set per home, and where the home holds them is not established (spec 02) |

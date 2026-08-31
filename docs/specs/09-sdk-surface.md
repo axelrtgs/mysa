@@ -36,11 +36,22 @@ await account.aclose()
 | `schedules` | `tuple[Schedule, ...]`, from the last `discover()` |
 | `homes` | `Mapping[str, Home]`; `home_of(device)` is the one a device belongs to |
 | `included_homes` | the homes discovery is limited to, or `None` |
+| `refresh_firmware()` | update availability for every discovered device |
 | `aclose()` | closes the session where the account opened it |
 
 `discover()` is identity and capability: what exists and what it can do. `refresh()` is
 state: what it is doing. A caller that only ever needs the second still calls the first
 once, because a device object cannot be built without its record.
+
+### Firmware
+
+`refresh_firmware()` is separate from `discover()` because it costs one request per
+device and answers a question that changes on the backend's schedule, not the account's.
+A caller that wants it asks for it; discovery does not pay for it.
+
+A device that cannot be read is left as it was: a BB-V3-0 returns 500 for its own
+`/devices/update_available` and is a working device with an unknown answer, which
+`firmware_update` reports as `None` rather than as no update. `[observed]`
 
 ### Limiting to a home
 
@@ -86,6 +97,9 @@ next `refresh()`. Identity is stable, so a caller may hold it.
 | `supports(capability)` | membership test |
 | semantic properties | spec 02 field maps, resolved against the cache |
 | `set_*()` | writes, below |
+| `setpoint_range` | the bounds a setpoint write must fall inside, for the section the mode selects |
+| `setpoint_step` | the resolution a setpoint is accepted at |
+| `firmware_update` | update availability, after `refresh_firmware()` |
 | `raw` | the device's own `/state/batch` document, for a caller that needs a field the SDK does not name |
 
 A semantic property whose field the device does not report is `None`. Absent values are
@@ -100,6 +114,27 @@ Enumerated values are exposed by name where a name is established (spec 02): `mo
 returns `"heat"`, and `mode_value` returns `4` for a caller that wants the wire value.
 A value with no established name reads as `None` from `mode` and its number from
 `mode_value`, so an unmapped value is visible rather than silently absent.
+
+### Setpoint bounds
+
+`min_setpoint` and `max_setpoint` are the lockout pair a device reports, which is a
+setting: they are what `Capability.SETPOINT_LIMITS` writes. `setpoint_range` answers a
+different question - what a write may contain - and resolves in order:
+
+1. `lockoutMin` and `lockoutMax` in the section the current mode selects, where that
+   section reports them;
+2. the range the device declares: `climateControl.heat.setpoint` in the capability
+   document, or `SupportedCaps.tempRange` on an AC unit;
+3. `None`, where neither is served.
+
+It follows the mode for the same reason `set_temperature` does (spec 03): the bounds are
+a property of the section being written, and an AC unit's `targetCool` carries no lockout
+pair while its `targetHeat` carries 19-24. Bounding a cool setpoint by the heat section's
+lockout would refuse setpoints the device accepts.
+
+`setpoint_step` is 0.5 for every device (spec 03). Both baseboards declare
+`climateControl.heat.setpoint` as 5, 5.5, 6 ... 30, which is where the number comes from;
+an AC unit declares no step and is written at the same resolution. `[observed]`
 
 ## Capabilities
 
@@ -193,6 +228,13 @@ Read-only, plus one write.
 
 `release()` is one-way and says so: ending a hold is a write, and nothing observed starts
 one (spec 08). Schedule definitions are not exposed; their shape is not established.
+
+## Sessions
+
+`MysaAuth.from_refresh_token(username, refresh_token, session)` builds auth from a stored
+refresh token, for a caller that logged in once and kept the token rather than the
+password. The first request renews the session; nothing about the SRP login is needed
+again, and pycognito is never imported.
 
 ## Errors
 

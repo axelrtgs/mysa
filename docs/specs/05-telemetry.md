@@ -59,9 +59,24 @@ Devices that do not report current expose no power or energy entities.
 
 Estimation from configured wattage and duty cycle is not implemented.
 
+## Units
+
+`current`, `voltage` and `wattage` carry established units (spec 02): milliamps, volts
+and watts.
+
+`energy` is exposed as kilowatt hours. `[inferred]` No capture reports a non-zero value,
+so the scale is taken from the app rather than read back from a device, and declaring it
+is what puts the value on Home Assistant's energy dashboard (spec 06). A capture with a
+non-zero `energy` settles it: compare its delta against `wattage` over the same interval
+and correct the entity if the field turns out to be watt hours.
+
+`powerConsumed` is exposed with no unit and no device class, for the same absence of
+evidence and the opposite conclusion: nothing downstream needs it to have one, so
+nothing is assumed.
+
 ## Cost
 
-`electricity_rate` from the device record is exposed as a diagnostic sensor. No cost
+`electricity_rate` from the home record is exposed as a diagnostic sensor. No cost
 sensor is created; energy is supplied to Home Assistant, which applies its own rate.
 
 ## Diagnostics
