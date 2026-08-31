@@ -96,8 +96,8 @@ async def test_the_schedule_entities_follow_the_section_and_not_the_model(
     """One BB-V1-0 carries a schedule section and the other does not (spec 02)."""
     await setup_account(hass, [load(BB_V1), load(BB_V1_NO_SCHEDULE)])
 
-    assert "release_hold" in _entities(hass, "device-728d8928")
-    assert "release_hold" not in _entities(hass, "device-f0e5a675")
+    assert {"release_hold", "schedule_hold"} <= _entities(hass, "device-728d8928")
+    assert {"release_hold", "schedule_hold"} & _entities(hass, "device-f0e5a675") == set()
 
 
 async def test_the_electricity_rate_comes_from_the_home(hass: HomeAssistant) -> None:

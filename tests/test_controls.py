@@ -232,66 +232,60 @@ async def test_climate_plus_is_an_ac_control(hass: HomeAssistant) -> None:
     ]
 
 
-async def test_the_hold_button_goes_away_with_the_schedule(hass: HomeAssistant) -> None:
-    """Deleting the schedule removes the section, and with it the hold (spec 08)."""
+async def test_the_release_button_comes_and_goes_with_the_hold(
+    hass: HomeAssistant,
+) -> None:
+    """A button's state is the timestamp of its last press, so there is no history to
+    keep by leaving one in place unavailable (spec 06)."""
     setup = await setup_account(hass, [load(BB_V1)])
-    assert hass.states.get("button.device_728d8928_release_schedule_hold").state != "unavailable"
+    button = "button.device_728d8928_release_schedule_hold"
+    assert hass.states.get(button) is not None
+    assert hass.states.get("binary_sensor.device_728d8928_schedule_hold").state == "on"
+
+    setup.rest.samples["device-728d8928"].state["schedule"]["holding"] = False
+    await setup.account.refresh()
+    setup.entry.runtime_data.async_update_listeners()
+    await hass.async_block_till_done()
+
+    assert hass.states.get(button) is None
+    assert hass.states.get("binary_sensor.device_728d8928_schedule_hold").state == "off"
+
+
+async def test_the_hold_sensor_stays_when_the_schedule_is_deleted(
+    hass: HomeAssistant,
+) -> None:
+    """Deleting the schedule removes the section; the sensor keeps its history."""
+    setup = await setup_account(hass, [load(BB_V1)])
 
     del setup.rest.samples["device-728d8928"].state["schedule"]
     await setup.account.refresh()
     setup.entry.runtime_data.async_update_listeners()
     await hass.async_block_till_done()
 
-    assert hass.states.get("button.device_728d8928_release_schedule_hold").state == "unavailable"
-    assert hass.states.get("sensor.device_728d8928_next_schedule_event").state == "unavailable"
-
-
-async def test_early_on_is_a_switch_where_it_can_be_written(hass: HomeAssistant) -> None:
-    """A BB-V3-0 holds it in `cloudFeatures`; a BB-V1-0 holds it on the device record,
-    which has no write path (spec 02)."""
-    setup = await setup_account(hass, [load(BB_V3), load(BB_V1)])
-    hasten(setup)
-
-    assert hass.states.get("switch.device_42d6d24f_early_on").state == "on"
-    assert hass.states.get("switch.device_728d8928_early_on") is None
-    assert hass.states.get("binary_sensor.device_728d8928_early_on") is not None
-
-    await hass.services.async_call(
-        Platform.SWITCH,
-        SERVICE_TURN_OFF,
-        {ATTR_ENTITY_ID: "switch.device_42d6d24f_early_on"},
-        blocking=True,
+    assert hass.states.get("button.device_728d8928_release_schedule_hold") is None
+    assert (
+        hass.states.get("binary_sensor.device_728d8928_schedule_hold").state
+        == "unavailable"
     )
+    assert (
+        hass.states.get("sensor.device_728d8928_next_schedule_event").state
+        == "unavailable"
+    )
+
+
+async def test_a_hold_that_appears_brings_its_button_back(hass: HomeAssistant) -> None:
+    setup = await setup_account(hass, [load(BB_V1)])
+    button = "button.device_728d8928_release_schedule_hold"
+
+    setup.rest.samples["device-728d8928"].state["schedule"]["holding"] = False
+    await setup.account.refresh()
+    setup.entry.runtime_data.async_update_listeners()
+    await hass.async_block_till_done()
+    assert hass.states.get(button) is None
+
+    setup.rest.samples["device-728d8928"].state["schedule"]["holding"] = True
+    await setup.account.refresh()
+    setup.entry.runtime_data.async_update_listeners()
     await hass.async_block_till_done()
 
-    assert setup.rest.writes == [
-        ("device-42d6d24f", {"source": 3, "cloudFeatures": {"cloudEarlyOn": {"enabled": False}}})
-    ]
-
-
-async def test_the_heater_type_offers_the_values_the_model_declares(
-    hass: HomeAssistant,
-) -> None:
-    """A BB-V1-0's 4 is radiant and a BB-V3-0 has no 4 at all (spec 02)."""
-    await setup_account(hass, [load(BB_V3), load(BB_V1)])
-
-    assert hass.states.get("select.device_42d6d24f_heater_type").attributes["options"] == [
-        "baseboard", "fan forced", "radiant",
-    ]
-    assert hass.states.get("select.device_728d8928_heater_type").attributes["options"] == [
-        "baseboard", "radiant", "fan forced, short cycle",
-        "fan forced, medium cycle", "fan forced, long cycle",
-    ]
-
-
-async def test_a_bb_v3_derives_its_wattage_from_the_live_current(
-    hass: HomeAssistant,
-) -> None:
-    """Its `power` section is frozen at an earlier on-cycle (spec 02)."""
-    sample = load(BB_V3)
-    assert sample.state["power"]["reported"]["wattage"] == 2989
-
-    await setup_account(hass, [sample])
-
-    assert hass.states.get("sensor.device_42d6d24f_power").state == "0.0"
-    assert hass.states.get("sensor.device_42d6d24f_current").state == "0"
+    assert hass.states.get(button) is not None

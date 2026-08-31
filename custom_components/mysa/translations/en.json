@@ -58,7 +58,8 @@
     "binary_sensor": {
       "connected": { "name": "Connection" },
       "early_on": { "name": "Early on" },
-      "firmware_update": { "name": "Firmware update" }
+      "firmware_update": { "name": "Firmware update" },
+      "schedule_hold": { "name": "Schedule hold" }
     },
     "button": {
       "release_hold": { "name": "Release schedule hold" }

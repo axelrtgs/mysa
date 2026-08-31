@@ -31,6 +31,8 @@ async def async_setup_entry(
             entities.append(MysaFirmware(coordinator, device))
         if device.early_on is not None and not device.supports(Capability.EARLY_ON):
             entities.append(MysaEarlyOn(coordinator, device))
+        if device.schedule is not None:
+            entities.append(MysaScheduleHold(coordinator, device))
     async_add_entities(entities)
 
 
@@ -100,3 +102,27 @@ class MysaEarlyOn(MysaEntity, BinarySensorEntity):
     @property
     def is_on(self) -> bool | None:
         return self.device.early_on
+
+
+class MysaScheduleHold(MysaEntity, BinarySensorEntity):
+    """Whether a schedule hold is in force.
+
+    Kept across the schedule being deleted and recreated, unlike the button that
+    releases one: this is the half worth a history (spec 06).
+    """
+
+    _attr_device_class = BinarySensorDeviceClass.RUNNING
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_translation_key = "schedule_hold"
+
+    def __init__(self, coordinator: MysaCoordinator, device: MysaDevice) -> None:
+        super().__init__(coordinator, device, "schedule_hold")
+
+    @property
+    def available(self) -> bool:
+        return super().available and self.device.schedule is not None
+
+    @property
+    def is_on(self) -> bool | None:
+        hold = self.device.schedule
+        return hold.holding if hold else None

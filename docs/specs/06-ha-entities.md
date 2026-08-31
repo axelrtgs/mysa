@@ -49,12 +49,13 @@ creates no entity, because a control with one option is not a control (spec 09).
 | `sensor` | next schedule event | the device carries a `schedule` section |
 | `binary_sensor` | connectivity | always |
 | `binary_sensor` | firmware update available | `refresh_firmware()` read an answer |
+| `binary_sensor` | schedule hold | the device carries a `schedule` section |
 | `select` | keypad lock | `Capability.LOCK` |
 | `select` | temperature format | `Capability.TEMPERATURE_FORMAT` |
 | `switch` | proximity wake, adaptive brightness, Climate+ | matching capability |
 | `number` | active brightness, idle brightness | `Capability.BRIGHTNESS` |
 | `number` | setpoint minimum, setpoint maximum | `Capability.SETPOINT_LIMITS` |
-| `button` | release schedule hold | the device carries a `schedule` section |
+| `button` | release schedule hold | a hold is in force; added and removed as one comes and goes |
 
 Fan speed, vertical swing and horizontal swing are properties of the climate entity, not
 separate selects: Home Assistant's climate entity carries all three, and a second entity
@@ -142,6 +143,7 @@ Home Assistant applies its own rate to the energy the integration supplies.
 | key | source | class |
 |---|---|---|
 | `connected` | `device.available` | connectivity |
+| `schedule_hold` | `device.schedule.holding` | running, diagnostic |
 | `firmware_update` | `device.firmware_update.available` | update, diagnostic |
 
 The firmware entity reports and does not install: no install path has been observed on
@@ -185,9 +187,14 @@ switch would offer a control whose other half cannot work.
 Schedule definitions are not exposed. Their shape is not established: every capture's day
 lists are empty (spec 08).
 
-Deleting the schedule removes the section, so both entities go unavailable rather than
-disappearing: a device that had a schedule can have one again, and an entity that comes
-and goes takes its history with it.
+The button exists only while there is a hold to release, and appears and disappears with
+one. A button's state is the timestamp of its last press, so there is no history to
+protect by keeping it around unavailable, and a button that cannot do anything is worse
+than no button.
+
+What deserves history is the hold itself, which is a binary sensor: whether one is in
+force, kept across the schedule being deleted and recreated. The next-event timestamp is
+the same - both go unavailable when the section does, rather than disappearing.
 
 ## Writes
 
