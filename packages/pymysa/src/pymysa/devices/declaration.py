@@ -23,7 +23,9 @@ OBSERVED_MODES: dict[str, tuple[int, ...]] = {"AC-V1-0": (0, 1, 3, 4, 7, 8)}
 #: step and is written at the same resolution. `[observed]`
 SETPOINT_STEP = 0.5
 
-#: The bounds a section reports for its own setpoint.
+#: The bounds a section reports for its own setpoint. Writable wherever they are
+#: reported, which the desired-half rule would otherwise deny: a BB-V1-0 carries them in
+#: `reported` only and the app moves both (spec 02). `[observed]`
 LOCKOUT = ("lockoutMin", "lockoutMax")
 
 
@@ -184,6 +186,8 @@ class Declaration:
         setting = self._settings.get((source.section, source.field))
         if setting is not None:
             return bool(setting.writable)
+        if source.field in LOCKOUT:
+            return True
         return self._in_desired(source.section, source.field)
 
     def _in_desired(self, section: str, field: str) -> bool:

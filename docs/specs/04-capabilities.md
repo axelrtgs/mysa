@@ -91,8 +91,9 @@ the mapping; nothing else translates between them.
 `interface.brightness` has no single state field: the device reports `activeIntensity`
 and `idleIntensity`, and the app exposes both separately `[observed]`.
 
-A BB-V1-0 reports `physicalInterface.intensityMode` without declaring it. An undeclared
-field is not writable and is not a feature: that model has no adaptive brightness.
+A BB-V1-0 reports `physicalInterface.intensityMode` without declaring it, and writes to
+it land anyway (spec 03). The declaration is the authority on what the hardware has, not
+on what the backend will accept: that model has no adaptive brightness.
 
 The flags under `smart` are capability presence, not settings: `earlyOn` and
 `cloudEarlyOn` say which mechanism a model uses for early-on, and the value the user sets

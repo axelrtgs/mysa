@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from pymysa.capabilities import Capability
 from pymysa.devices import MysaDevice
 
 BB_CAPABILITIES = {
@@ -99,3 +100,17 @@ def test_a_lockout_pair_with_one_half_missing_is_not_a_range():
 def test_every_model_is_written_at_half_a_degree():
     assert _bb(_bb_document()).setpoint_step == 0.5
     assert _device(AC_RECORD, AC_DOC).setpoint_step == 0.5
+
+
+def test_the_lockout_pair_is_writable_where_it_is_reported_only():
+    """A BB-V1-0 carries it in `reported` alone and the app moves both (spec 02)."""
+    document = _bb_document(lockoutMin=5, lockoutMax=24)
+    document["targetHeat"]["desired"] = {"setpoint": 20}
+    device = _bb(document, BB_CAPABILITIES)
+
+    assert Capability.SETPOINT_LIMITS in device.capabilities
+    assert (device.min_setpoint, device.max_setpoint) == (5, 24)
+
+
+def test_a_device_reporting_no_lockout_pair_declares_no_limits():
+    assert Capability.SETPOINT_LIMITS not in _bb(_bb_document()).capabilities

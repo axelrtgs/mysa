@@ -57,6 +57,18 @@ On an AC-V1 holding `modes.mode` 3, a `targetCool.setpoint` write applies and a
 Bounds are per device and are read from the same section: `targetHeat.lockoutMin` and
 `lockoutMax` bound `targetHeat.setpoint`.
 
+## Applied and still not a feature `[observed]`
+
+A write can be accepted, appear in `reported`, survive a restore - and drive nothing. A
+BB-V1-0 takes `physicalInterface.intensityMode` 1 and reads it back, and that model has
+no ambient light sensor to be adaptive with: the sensor arrives with BB-V2 and proximity
+with BB-V3.
+
+So a confirmed write is evidence about the field, not about the feature behind it. What
+the hardware has is what the capability document says it has, and where the two disagree
+the document wins. A control offered on the strength of a write landing is a control that
+reports its own setting back to the user and does nothing else.
+
 ## Units `[observed]`
 
 Setpoints are degrees Celsius in steps of 0.5: a BB declares

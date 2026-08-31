@@ -102,15 +102,16 @@ async def test_the_proximity_switch_writes_the_flag(hass: HomeAssistant) -> None
     ]
 
 
-async def test_setpoint_limits_exist_only_where_the_device_holds_a_desired_pair(
+async def test_setpoint_limits_exist_wherever_the_pair_is_reported(
     hass: HomeAssistant,
 ) -> None:
-    """A BB-V1-0 carries no `lockoutMin` in `targetHeat.desired`, so it cannot be
-    written: the backend keeps no desired value for it (spec 02)."""
+    """A BB-V1-0 carries the pair in `reported` alone and the app still moves it: the
+    lockout pair is the exception to the desired-half rule (spec 02)."""
     await setup_account(hass, [load(BB_V3), load(BB_V1)])
 
     assert hass.states.get("number.device_42d6d24f_setpoint_minimum") is not None
-    assert hass.states.get("number.device_728d8928_setpoint_minimum") is None
+    assert hass.states.get("number.device_728d8928_setpoint_minimum") is not None
+    assert hass.states.get("number.device_728d8928_setpoint_maximum").state == "24"
 
 
 async def test_a_setpoint_limit_is_bounded_by_the_declaration_not_by_itself(

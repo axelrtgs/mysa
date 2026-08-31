@@ -27,10 +27,15 @@ seconds. `reported` is the value in force.
 `drState` is flat with no shadow pair.
 
 Within a shadow section the two halves need not carry the same fields, and a field in
-`reported` with no counterpart in `desired` is not writable: the backend keeps no desired
-value for it, so the write returns 200 and is dropped. Both AC-V1-0 units report
+`reported` with no counterpart in `desired` is usually not writable: the backend keeps no
+desired value for it, so the write returns 200 and is dropped. Both AC-V1-0 units report
 `modes.unitPower` and neither carries it in `desired`, and writes to it are accepted and
 never applied in any mode. `[observed]`
+
+The setpoint lockout pair is the exception. A BB-V1-0 carries `lockoutMin` and
+`lockoutMax` in `reported` only, and the app moves both; every model reports a pair
+narrower than the range its hardware declares, which is a user setting and not a default.
+`[observed]`
 
 A section absent from a device's document is a capability that device does not have.
 Nothing reads the model string to decide what a device supports.
@@ -292,9 +297,10 @@ The capability document declares one `interface.brightness`; the device reports 
 fields and the app exposes both. `physicalInterface.activeIntensity` is the display while
 in use and `idleIntensity` is at rest.
 
-A BB-V1-0 reports `physicalInterface.intensityMode` and its capability document does not
-declare it. The app offers no adaptive brightness on that model, and the field reads 0.
-A field present in the state document is not a feature the device has.
+A BB-V1-0 reports `physicalInterface.intensityMode`, accepts a write of 1 and reads it
+back, and has no adaptive brightness: the capability document does not declare the field
+and the model carries no ambient light sensor. Neither reporting a field nor writing one
+successfully makes it a feature (spec 03).
 
 `physicalInterface.doCheckmark` is a trigger, not a setting. A BB-V3-0 holds `desired`
 1 across runs while `reported` stays 0: the device shows the checkmark and keeps nothing.

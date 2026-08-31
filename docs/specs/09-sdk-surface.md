@@ -171,7 +171,8 @@ established. Two rules narrow the declared set first:
 
 A field the device reports with no counterpart in its section's `desired` half is not a
 control either, whatever it looks like: the backend holds no desired value for it and
-drops the write (spec 02).
+drops the write. The setpoint lockout pair is the exception the rule has, and is declared
+wherever a device reports it (spec 02).
 
 ## Writes
 
