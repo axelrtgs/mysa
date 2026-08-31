@@ -15,7 +15,17 @@ See `docs/specs/` for the specifications everything is written from.
 ## Installing in Home Assistant
 
 Through HACS as a custom repository, or by copying `custom_components/mysa` into your
-Home Assistant `config/custom_components/`. Either way `pymysa` has to be installable:
+Home Assistant `config/custom_components/`.
+
+HACS downloads files from `raw.githubusercontent.com` and release assets from
+`github.com/.../releases/download/...`, with no authorization header on either, so it
+can only install from a repository that is public. Its own GitHub login covers the API
+calls it makes to read a repository, not the downloads.
+
+Tagging a release puts that version in the HACS version picker, which offers the five
+most recent. The tag and `manifest.json`'s `version` have to agree - CI refuses to
+publish a release where they do not - because HACS installs the repository at the tag
+while Home Assistant reports what the manifest says. Either way `pymysa` has to be installable:
 Home Assistant runs `uv pip install pymysa==0.1.0` from the manifest when the entry is
 set up, so the package needs to be on an index the instance can reach.
 
