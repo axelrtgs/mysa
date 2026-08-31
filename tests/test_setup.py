@@ -166,3 +166,28 @@ async def test_a_disconnected_device_still_reports_that_it_is_disconnected(
 
     assert hass.states.get("binary_sensor.device_42d6d24f_connection").state == "off"
     assert hass.states.get("climate.device_42d6d24f").state == "unavailable"
+
+
+async def test_a_device_id_that_is_a_mac_links_to_whatever_else_knows_it(
+    hass: HomeAssistant,
+) -> None:
+    """Home Assistant links registry entries sharing a MAC connection (spec 06)."""
+    sample = load(BB_V1)
+    sample.record["Id"] = "aabbccddeeff"
+
+    await setup_account(hass, [sample])
+
+    device = dr.async_get(hass).async_get_device(identifiers={("mysa", "aabbccddeeff")})
+    assert device is not None
+    assert device.connections == {("mac", "aa:bb:cc:dd:ee:ff")}
+
+
+async def test_an_id_that_is_not_a_mac_registers_no_connection(
+    hass: HomeAssistant,
+) -> None:
+    """A connection nothing owns would match whatever else guessed the same string."""
+    await setup_account(hass, [load(BB_V1)])
+
+    device = dr.async_get(hass).async_get_device(identifiers={("mysa", "device-728d8928")})
+    assert device is not None
+    assert device.connections == set()

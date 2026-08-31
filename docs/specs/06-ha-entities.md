@@ -66,6 +66,12 @@ matches on `unique_id` and creates a fresh entity for one it has not seen.
 device registry, whose entry carries the Mysa device id as its identifier, the model,
 the firmware as `sw_version` and the serial where the model reports one.
 
+A Mysa device id is the device's MAC address, so the registry entry also carries it as a
+MAC connection. Home Assistant links registry entries that share one, which is what puts
+the thermostat and its network client - a UniFi client, say - on each other's pages. An
+id that is not twelve hex characters is not registered as a MAC: a connection nothing
+owns would match whatever else guessed the same string.
+
 An entity is available when the last coordinator update succeeded, the device reports
 itself connected, and its own value is not `None`.
 

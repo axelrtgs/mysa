@@ -2,16 +2,24 @@
 
 from __future__ import annotations
 
+import re
 from collections.abc import Coroutine
 from typing import Any
 
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
-from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.device_registry import (
+    CONNECTION_NETWORK_MAC,
+    DeviceInfo,
+    format_mac,
+)
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from pymysa import MysaDevice, MysaError, UnsupportedCommand, ValueRefused
 
 from .const import DOMAIN, MANUFACTURER
 from .coordinator import MysaCoordinator
+
+#: A device id is the device's MAC. Anything else is an id this integration invented.
+MAC = re.compile(r"[0-9a-f]{12}", re.IGNORECASE)
 
 
 class MysaEntity(CoordinatorEntity[MysaCoordinator]):
@@ -33,6 +41,7 @@ class MysaEntity(CoordinatorEntity[MysaCoordinator]):
         self._attr_unique_id = device.id if key is None else f"{device.id}-{key}"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, device.id)},
+            connections=_connections(device.id),
             manufacturer=MANUFACTURER,
             model=device.model or None,
             name=device.name,
@@ -73,3 +82,14 @@ class MysaEntity(CoordinatorEntity[MysaCoordinator]):
             ) from err
         self.async_write_ha_state()
         await self.coordinator.async_request_refresh()
+
+
+def _connections(device_id: str) -> set[tuple[str, str]]:
+    """The device's MAC, where its id is one.
+
+    Home Assistant links registry entries sharing a connection, which is what puts a
+    thermostat and its network client on each other's pages.
+    """
+    if MAC.fullmatch(device_id):
+        return {(CONNECTION_NETWORK_MAC, format_mac(device_id))}
+    return set()
