@@ -1,0 +1,28 @@
+{
+  "_model": "BB-V3-0",
+  "_firmware": "5.1.9",
+  "_source": "observed",
+  "Model": "BB-V3-0", "Format": "celsius", "Mode": 0, "Voltage": 240,
+  "Current": 0, "Lock": 0, "Brightness": 100,
+  "MaxBrightness": 100, "MinBrightness": 25, "MaxSetpoint": 24, "MinSetpoint": 5,
+  "AutoBrightness": true, "ProximityMode": true, "ecoMode": 1, "EcoMode": false,
+  "isConnected": true, "lastConnected": 1788129884,
+  "reading": {
+    "timestamp": 1788129884, "rawTemperature": 23.25, "roomTemperature": 22.54,
+    "humidity": 48, "coreTemperature": 22.28, "secondaryRawTemperature": 23.19,
+    "dutyCycle": 0, "current": 0, "energy": 0, "remoteTemperature": -30,
+    "configuredTracking": 0, "onTime": 0, "mode": 0, "heatSetpoint": 20,
+    "powerConsumed": 0, "timestampEstimated": true
+  },
+  "rawTemperature": 23.25, "roomTemperature": 22.54, "humidity": 48,
+  "coreTemperature": 22.28, "secondaryRawTemperature": 23.19,
+  "dutyCycle": 0, "current": 0, "energy": 0, "remoteTemperature": -30,
+  "mode": 0, "heatSetpoint": 20, "powerConsumed": 0, "onTime": 0,
+  "target_heat": 20, "current_humidity": 48,
+  "model": "BB-V3-0", "fw": "5.1.9",
+  "activeIntensity": 100, "idleIntensity": 30, "wakeOnApproach": 1,
+  "woaSensitivity": 50, "lockout": 0, "format": "C", "intensityMode": 1,
+  "darkRoomLevel": 5, "brightRoomLevel": 500,
+  "freeHeap": 57227, "freePsram": 1964836, "bootCount": 6,
+  "secureBootEnabled": 1, "encryptionEnabled": 1
+}

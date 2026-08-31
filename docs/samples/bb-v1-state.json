@@ -1,0 +1,30 @@
+{
+  "_model": "BB-V1-0",
+  "_firmware": "3.17.3.1",
+  "_source": "observed",
+  "Model": "BB-V1-0", "Format": "celsius", "HeaterType": "fan forced",
+  "Mode": 1, "TstatMode": 1, "SetPoint": 21, "Voltage": 240,
+  "Current": 0, "Duty": 0, "DutyCycle": 0, "MaxCurrent": "5.647960",
+  "CorrectedTemp": { "v": 22.06, "t": 1788129896 },
+  "SensorTemp": { "v": 22.8, "t": 1788129816 },
+  "Humidity": { "v": 49, "t": 1788129896 },
+  "HeatSink": 21.6, "Rssi": -60, "Connected": true, "Lock": 0,
+  "Brightness": 100, "MaxBrightness": 100, "MinBrightness": 25,
+  "MaxSetpoint": 24, "MinSetpoint": 5,
+  "AutoBrightness": true, "ProximityMode": true, "ecoMode": 1, "EcoMode": false,
+  "DutyCycleOpt": 7, "ScheduleMode": { "t": 1786083439, "v": 1 },
+  "HoldTime": { "v": -1, "t": 1786083439 },
+  "OnTime": { "v": 0, "t": 1788129816 }, "OffTime": { "t": 1788129816, "v": 24.6 },
+  "FreeHeap": { "v": 128670, "t": 1788129816 },
+  "reading": {
+    "timestamp": 1788129816, "rawTemperature": 22.8, "roomTemperature": 21.9,
+    "humidity": 49, "heatSetpoint": 21, "coolSetpoint": 21, "onTime": 0,
+    "coreTemperature": 21.6, "freeHeap": 128670, "rssi": -60, "mode": 1,
+    "voltage": 240, "maxCurrent": 5.64796, "powerConsumed": 0, "instantLoad": 0,
+    "dutyCycle": 0, "timestampEstimated": true
+  },
+  "family": "BB", "model": "BB-V1-0", "fw": "3.17.3.1",
+  "target_heat": 21, "target_cool": 21, "current_humidity": 49,
+  "activeIntensity": 100, "idleIntensity": 25, "wakeOnApproach": 1,
+  "lockout": 0, "format": "C"
+}

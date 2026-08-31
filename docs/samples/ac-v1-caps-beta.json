@@ -1,0 +1,39 @@
+{
+  "_comment": "AC-V1-0 pre-release unit, firmware 3.17.5.9. No modes block, no version field.",
+  "_source": "observed",
+  "tempRange": [
+    16,
+    30
+  ],
+  "modifiedKeys": [
+    1,
+    2,
+    3,
+    7,
+    4,
+    6,
+    5,
+    11,
+    10,
+    9,
+    8,
+    47
+  ],
+  "keys": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    13,
+    14,
+    47
+  ],
+  "_unit": "beta"
+}
