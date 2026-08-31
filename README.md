@@ -2,12 +2,50 @@
 
 Python SDK and Home Assistant integration for Mysa smart thermostats.
 
-| package | contents |
+| path | contents |
 |---|---|
 | `packages/pymysa` | Python SDK. No Home Assistant dependency. |
-| `packages/homeassistant-mysa` | Home Assistant custom integration. |
+| `custom_components/mysa` | Home Assistant custom integration. Depends on `pymysa`. |
 
-Status: specification. See `docs/specs/`.
+The integration sits at the repository root because that is where HACS looks: it walks
+the tree for a top-level `custom_components/<domain>` and reads no path from `hacs.json`.
+
+See `docs/specs/` for the specifications everything is written from.
+
+## Installing in Home Assistant
+
+Through HACS as a custom repository, or by copying `custom_components/mysa` into your
+Home Assistant `config/custom_components/`. Either way `pymysa` has to be installable:
+Home Assistant runs `uv pip install pymysa==0.1.0` from the manifest when the entry is
+set up, so the package needs to be on an index the instance can reach.
+
+Then add **Mysa** from *Settings -> Devices & services*. Setup asks for the email and
+password you use in the app. The password is used once, for the SRP login; what is
+stored is a refresh token, and the password itself only if you ask for it to be kept.
+Where the account holds more than one home, a second step asks which to set up - devices
+in a home you do not choose are neither created nor polled.
+
+You get one thermostat per device, with the modes, fan speeds and swing positions that
+device declares, plus its measurements, its interface settings, and a button to release
+a schedule hold. Everything is gated on what the device declares: a control with fewer
+than two options is not a control, and a field being present is not a feature.
+
+The polling interval and the home selection are in the integration's options. One
+request covers the whole account however many devices it holds.
+
+### Known gaps
+
+Documented in the specs, and not bugs to rediscover:
+
+- An AC-V1-0 serves no capability document, so its controls come from the codeset and
+  from observed value sets (spec 04).
+- Horizontal swing is gated on a codeset declaration neither sample unit serves, so it
+  is not offered even on the unit that reports the field (spec 04).
+- Schedule definitions are not exposed: every capture's day lists are empty (spec 08).
+- The sensor-mode control is not exposed: `tracking.tracking` holds numbers and its
+  declared names are tied to none of them (spec 09).
+- `energy` is declared in kilowatt hours on evidence that does not exist yet, and
+  `powerConsumed` is left unitless. Spec 05 records what settles both.
 
 ## Hardware support
 
@@ -35,6 +73,18 @@ pymysa-debug process     # redact the captures for a pull request
 
 Raw captures stay local. `process` redacts them into `docs/samples/`. See
 [`docs/specs/07-debug-harness.md`](docs/specs/07-debug-harness.md).
+
+## Development
+
+```
+pytest                            # both packages, from the repository root
+ruff check custom_components tests
+mypy --strict custom_components
+```
+
+`packages/pymysa` carries its own configuration and is checked the same way. Entity
+tests run against the redacted captures in `docs/samples`, so what is asserted is what a
+device actually sends.
 
 ## Design
 

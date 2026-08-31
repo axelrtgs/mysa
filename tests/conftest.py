@@ -26,7 +26,7 @@ from custom_components.mysa.const import (
     DOMAIN,
 )
 
-SAMPLES = Path(__file__).parents[3] / "docs" / "samples"
+SAMPLES = Path(__file__).parents[1] / "docs" / "samples"
 
 BB_V1 = "BB-V1-0/read/device-728d8928.json"
 BB_V1_NO_SCHEDULE = "BB-V1-0/read/device-f0e5a675.json"

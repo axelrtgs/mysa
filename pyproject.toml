@@ -1,3 +1,4 @@
+# The integration package. `packages/pymysa` carries its own configuration.
 [tool.ruff]
 line-length = 100
 target-version = "py313"
@@ -17,4 +18,4 @@ ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
-pythonpath = [".", "../pymysa/src"]
+pythonpath = [".", "packages/pymysa/src"]

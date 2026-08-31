@@ -9,33 +9,38 @@ mysa/
 │   ├── specs/00..09              the source of truth; every protocol fact is tagged
 │   └── samples/                  captured payloads; drive the tests
 ├── packages/
-│   ├── pymysa/
-│   │   └── src/pymysa/
-│   │       ├── const.py          Cognito ids, endpoints, client headers
-│   │       ├── auth.py           SRP login, refresh over plain HTTP
-│   │       ├── transport/rest.py the only transport (spec 01)
-│   │       ├── account.py        MysaAccount: discovery, refresh, homes
-│   │       ├── capabilities.py   Capability, the codeset and the capability document
-│   │       ├── devices/
-│   │       │   ├── base.py       MysaDevice: identity and the cache
-│   │       │   ├── maps.py       semantic name -> section and key, per model
-│   │       │   ├── readings.py   semantic properties
-│   │       │   ├── declaration.py capabilities, options and setpoint bounds
-│   │       │   └── writing.py    setters and confirmation
-│   │       ├── meanings.py       what a reported value means
-│   │       ├── shapes.py         declared value shapes
-│   │       ├── schedules.py      hold state, and the one write
-│   │       ├── firmware.py       update availability
-│   │       └── debug/            the harness: inspect | exercise | observe | process
-│   └── homeassistant-mysa/
-│       └── custom_components/mysa/
-│           ├── coordinator.py    one per account; the only clock
-│           ├── entity.py         identity, availability, the write path
-│           ├── climate.py  sensor.py  binary_sensor.py
-│           ├── select.py   number.py  switch.py  button.py
-│           └── config_flow.py
+│   └── pymysa/
+│       └── src/pymysa/
+│           ├── const.py          Cognito ids, endpoints, client headers
+│           ├── auth.py           SRP login, refresh over plain HTTP
+│           ├── transport/rest.py the only transport (spec 01)
+│           ├── account.py        MysaAccount: discovery, refresh, homes
+│           ├── capabilities.py   Capability, the codeset and the capability document
+│           ├── devices/
+│           │   ├── base.py       MysaDevice: identity and the cache
+│           │   ├── maps.py       semantic name -> section and key, per model
+│           │   ├── readings.py   semantic properties
+│           │   ├── declaration.py capabilities, options and setpoint bounds
+│           │   └── writing.py    setters and confirmation
+│           ├── meanings.py       what a reported value means
+│           ├── shapes.py         declared value shapes
+│           ├── schedules.py      hold state, and the one write
+│           ├── firmware.py       update availability
+│           └── debug/            the harness: inspect | exercise | observe | process
+├── custom_components/mysa/       the integration; at the root because HACS looks there
+│   ├── coordinator.py            one per account; the only clock
+│   ├── entity.py                 identity, availability, the write path
+│   ├── climate.py  sensor.py  binary_sensor.py
+│   ├── select.py   number.py  switch.py  button.py
+│   └── config_flow.py
+├── tests/                        the integration's tests
+├── hacs.json  pyproject.toml
 └── .github/workflows/ci.yml
 ```
+
+The integration is not under `packages/` with the SDK. HACS walks the repository tree
+for a top-level `custom_components/<domain>` and reads no path from `hacs.json`, so a
+nested one is never found.
 
 ## Where model-specific behaviour lives
 
