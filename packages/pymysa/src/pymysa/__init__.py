@@ -17,7 +17,7 @@ from .firmware import FirmwareUpdate
 from .homes import Home
 from .schedules import Schedule, ScheduleHold
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "AuthenticationError",

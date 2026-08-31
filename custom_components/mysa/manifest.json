@@ -10,7 +10,7 @@
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/axelrtgs/mysa/issues",
   "requirements": [
-    "pymysa@https://github.com/axelrtgs/mysa/releases/download/v0.1.0/pymysa-0.1.0-py3-none-any.whl"
+    "pymysa@https://github.com/axelrtgs/mysa/releases/download/v0.2.0/pymysa-0.2.0-py3-none-any.whl"
   ],
-  "version": "0.1.0"
+  "version": "0.2.0"
 }

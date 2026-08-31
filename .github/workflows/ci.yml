@@ -30,8 +30,9 @@ jobs:
         with:
           python-version: "3.13"
       - run: pip install pytest-homeassistant-custom-component ruff mypy ./packages/pymysa
-      - run: ruff check custom_components tests
-      - run: mypy --strict custom_components
+      - run: python3 scripts/versions.py
+      - run: ruff check custom_components tests scripts
+      - run: mypy --strict custom_components scripts
       - run: pytest tests -q
 
   hassfest:
