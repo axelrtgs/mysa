@@ -211,7 +211,7 @@ async def setup_account(
         return account
 
     # Started rather than scoped, so a reload inside the test builds its account from
-    # the same transport. `stop_patches` ends it.
+    # the same transport. `stop_account_patches` ends it.
     patcher = patch("custom_components.mysa.coordinator.MysaAccount", side_effect=build)
     patcher.start()
     _PATCHERS.append(patcher)

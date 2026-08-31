@@ -7,9 +7,7 @@
 | `pymysa` | `packages/pymysa` | Python SDK. No Home Assistant imports. |
 | `homeassistant-mysa` | `custom_components/mysa` | Home Assistant custom integration. Depends on `pymysa`. Contains no protocol code. |
 
-The integration lives at the repository root rather than beside the SDK because HACS
-walks the tree for a top-level `custom_components/<domain>` and takes no path from
-`hacs.json` (spec 06).
+The integration is at the repository root because that is where HACS looks for it.
 
 ## Layers
 

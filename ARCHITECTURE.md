@@ -38,9 +38,8 @@ mysa/
 └── .github/workflows/ci.yml
 ```
 
-The integration is not under `packages/` with the SDK. HACS walks the repository tree
-for a top-level `custom_components/<domain>` and reads no path from `hacs.json`, so a
-nested one is never found.
+The integration is not under `packages/` with the SDK: HACS walks the tree for a
+top-level `custom_components/<domain>` and takes no path from `hacs.json`.
 
 ## Where model-specific behaviour lives
 
@@ -59,8 +58,7 @@ described.
 The integration contains no protocol code (spec 00). It reads `device.capabilities` to
 decide what exists, `device.options(...)` to decide what a control offers, semantic
 properties to read, and `set_*` to write. Where it needs something the SDK does not
-expose, the SDK gains it - `setpoint_range` and `firmware_update` were added that way -
-rather than the integration learning a field name.
+expose, the SDK gains it, rather than the integration learning a field name.
 
 ## Testing
 

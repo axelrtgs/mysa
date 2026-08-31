@@ -20,7 +20,7 @@ it and add a lifecycle to unwind on every reload.
 account = await MysaAccount.login(username, password)
 await account.discover()          # /devices, /capabilities/{id}, /homes, /schedules
 await account.refresh()           # /state/batch for every known device
-device = account.devices["ccddeeff0011"]
+device = account.devices["device-42d6d24f"]
 await account.aclose()
 ```
 
@@ -60,7 +60,7 @@ An account can hold more than one home, and a caller usually wants one of them.
 ```python
 account = await MysaAccount.login(username, password)
 homes = await account.list_homes()        # one request, no devices
-account.limit_to(["0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d"])
+account.limit_to(["id-57c49dd2"])
 await account.discover()
 ```
 

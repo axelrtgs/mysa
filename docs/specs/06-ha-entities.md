@@ -20,9 +20,8 @@ A device in a home the entry does not include is neither created nor polled, bec
 | homes | every home | options; the config flow asks where there is more than one |
 
 `refresh_firmware()` runs at setup and then at most once every 24 hours, from inside the
-coordinator's update. It costs one request per device (spec 09), and what it answers
-changes on the backend's schedule rather than the account's; polling it every minute
-would be a request per device per minute for a value that moves a few times a year.
+coordinator's update: it costs one request per device (spec 09) to answer something that
+moves a few times a year.
 
 ## Entities
 
@@ -129,9 +128,8 @@ Home Assistant applies its own rate to the energy the integration supplies.
 | `connected` | `device.available` | connectivity |
 | `firmware_update` | `device.firmware_update.available` | update, diagnostic, disabled by default |
 
-The firmware entity reports and does not install. No install path has been observed on
-any surface this project reads, so an `update` entity would be one whose only button
-does nothing; the reported answer is a diagnostic and is disabled until asked for.
+The firmware entity reports and does not install: no install path has been observed on
+any surface this project reads, so an `update` entity's only button would do nothing.
 
 ## Selects, switches and numbers
 
@@ -159,8 +157,8 @@ A hold is released and not created: writing `holding: false` ends one, and nothi
 observed starts one, because whatever creates a hold carries the setting being held and
 the state document does not (spec 08).
 
-So the hold is a `button` that releases, alongside a timestamp sensor for the next event
-- not a switch. A switch would offer a control whose other half cannot work.
+So it is a `button` that releases, alongside a timestamp sensor for the next event. A
+switch would offer a control whose other half cannot work.
 
 Schedule definitions are not exposed. Their shape is not established: every capture's day
 lists are empty (spec 08).
@@ -176,8 +174,8 @@ Confirmation runs in the SDK. If a write never lands, the SDK drops the pending 
 calls `on_write_failed`; the integration passes that callback when it constructs the
 account, and the callback updates every entity on the coordinator, so the value in the UI
 snaps back to what the device actually holds. It is logged as a warning naming the device
-and the field: an accepted-and-ignored write is a real event and silence would leave the
-user believing a control works.
+and the field, because a control that silently does nothing otherwise looks like one that
+works.
 
 | refusal | surfaces as |
 |---|---|
@@ -187,14 +185,13 @@ user believing a control works.
 
 ## Missing fields
 
-At setup, each device's critical fields (spec 02) are checked and any that resolve to
-`None` are logged once at error with the device and the model. A thermostat that cannot
-report its target temperature is broken whatever it is, and an integration that shows an
-unavailable entity without saying why sends the user looking at their network.
+At setup, `current_temperature`, `target_temperature` and `mode` are checked and any that
+resolve to `None` are logged once at error with the device and the model: an unavailable
+thermostat with no explanation sends the user looking at their network.
 
-Three of the four are checked: `current_temperature`, `target_temperature` and `mode`.
-`connected` is not, because a device that reports no connection state and one that
-reports itself offline read the same, and the connectivity entity is what says which.
+`connected`, the fourth critical field (spec 02), is not checked. A device that reports
+no connection state and one that reports itself offline read the same, and the
+connectivity entity is what says which.
 
 ## Config flow
 
@@ -210,8 +207,7 @@ reports itself offline read the same, and the connectivity entity is what says w
   entry, which reruns discovery: devices in a home that is no longer chosen are removed
   and devices in a newly chosen one are added. Removal is real: a device the new
   discovery does not return is dropped from the device registry, which takes its
-  entities with it. Left alone it would stay in the UI as an unavailable thermostat for
-  good.
+  entities with it - otherwise it stays in the UI as an unavailable thermostat.
 - `async_step_reauth` handles a session that cannot be renewed, and asks for the password
   again unless one is stored.
 

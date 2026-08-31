@@ -70,9 +70,8 @@ is what puts the value on Home Assistant's energy dashboard (spec 06). A capture
 non-zero `energy` settles it: compare its delta against `wattage` over the same interval
 and correct the entity if the field turns out to be watt hours.
 
-`powerConsumed` is exposed with no unit and no device class, for the same absence of
-evidence and the opposite conclusion: nothing downstream needs it to have one, so
-nothing is assumed.
+`powerConsumed` is exposed with no unit and no device class: nothing establishes one,
+and nothing downstream needs one.
 
 ## Cost
 

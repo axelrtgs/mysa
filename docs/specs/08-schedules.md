@@ -61,7 +61,7 @@ identified by its contents and not its position.
 The container is `ScheduledActions` on a `/schedules` entry, keyed by weekday name:
 
 ```jsonc
-{"Device": "aabbccddeeff",
+{"Device": "device-728d8928",
  "ScheduledActions": {"Monday": [], "Tuesday": [], ... , "Sunday": []}}
 ```
 

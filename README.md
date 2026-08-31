@@ -7,40 +7,25 @@ Python SDK and Home Assistant integration for Mysa smart thermostats.
 | `packages/pymysa` | Python SDK. No Home Assistant dependency. |
 | `custom_components/mysa` | Home Assistant custom integration. Depends on `pymysa`. |
 
-The integration sits at the repository root because that is where HACS looks: it walks
-the tree for a top-level `custom_components/<domain>` and reads no path from `hacs.json`.
-
 See `docs/specs/` for the specifications everything is written from.
 
-## Installing in Home Assistant
+## Install
 
-Through HACS as a custom repository, or by copying `custom_components/mysa` into your
-Home Assistant `config/custom_components/`.
+The repository has to be public for HACS to install from it: HACS reads a repository
+through the GitHub API with its own login, but downloads files from
+`raw.githubusercontent.com` and release assets from `github.com` with no authorization
+header on either.
 
-`pymysa` is not on PyPI. The manifest requires it by URL, at the wheel published with
-the matching release, and Home Assistant installs it with `uv pip install` when the
-entry is set up. Home Assistant cannot compare versions for a URL requirement, so it
-hands it to the package manager on every setup - which is what makes an upgrade take.
+Add it to HACS as a custom repository, or copy `custom_components/mysa` into your Home
+Assistant `config/custom_components/`. `pymysa` is not on PyPI: the manifest requires it
+by URL, at the wheel published as an asset of the matching release, and Home Assistant
+installs it when the entry is set up.
 
-HACS downloads files from `raw.githubusercontent.com` and release assets from
-`github.com/.../releases/download/...`, with no authorization header on either, so it
-can only install from a repository that is public. Its own GitHub login covers the API
-calls it makes to read a repository, not the downloads.
-
-Tagging a release puts that version in the HACS version picker, which offers the five
-most recent, and publishes the `pymysa` wheel as an asset of that release. Three things
-have to agree, and CI refuses to publish a release where they do not: the tag, the
-`version` in `manifest.json`, and the wheel named by the manifest's requirement. HACS
-installs the repository at the tag, Home Assistant reports the manifest's version, and
-the requirement is what actually gets installed. Either way `pymysa` has to be installable:
-Home Assistant runs `uv pip install pymysa==0.1.0` from the manifest when the entry is
-set up, so the package needs to be on an index the instance can reach.
-
-Then add **Mysa** from *Settings -> Devices & services*. Setup asks for the email and
-password you use in the app. The password is used once, for the SRP login; what is
-stored is a refresh token, and the password itself only if you ask for it to be kept.
-Where the account holds more than one home, a second step asks which to set up - devices
-in a home you do not choose are neither created nor polled.
+Then add **Mysa** from *Settings -> Devices & services*. It asks for the email and
+password you use in the app. The password is used once, for the SRP login; what is kept
+is a refresh token, and the password itself only if you ask for it to be. Where the
+account holds more than one home, a second step asks which to set up - devices in a home
+you do not choose are neither created nor polled.
 
 You get one thermostat per device, with the modes, fan speeds and swing positions that
 device declares, plus its measurements, its interface settings, and a button to release
@@ -48,7 +33,7 @@ a schedule hold. Everything is gated on what the device declares: a control with
 than two options is not a control, and a field being present is not a feature.
 
 The polling interval and the home selection are in the integration's options. One
-request covers the whole account however many devices it holds.
+request covers the whole account, however many devices it holds.
 
 ### Known gaps
 
@@ -99,9 +84,13 @@ ruff check custom_components tests
 mypy --strict custom_components
 ```
 
-`packages/pymysa` carries its own configuration and is checked the same way. Entity
-tests run against the redacted captures in `docs/samples`, so what is asserted is what a
-device actually sends.
+`packages/pymysa` carries its own configuration and is checked the same way. Tests run
+against the captures in `docs/samples`, so what is asserted is what a device sends.
+
+Releases are cut by tagging `v<version>`, which publishes the wheel and puts that
+version in the HACS picker. The tag, `manifest.json`'s `version`, the SDK's version and
+the wheel named in the manifest's requirement all have to agree; CI will not publish a
+release where they do not.
 
 ## Design
 
@@ -109,7 +98,8 @@ device actually sends.
   every field; the MQTT surface devices also publish on does not, and is not used.
 - Power and energy come from measured current and voltage. Nothing is estimated.
 - Values the device does not report are unavailable, never defaulted.
-- Model-specific behaviour lives in device classes; nothing else branches on model.
+- Model-specific behaviour lives in the field maps and the meanings table; nothing
+  else branches on model.
 
 ## Provenance
 

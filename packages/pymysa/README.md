@@ -24,7 +24,7 @@ account = await MysaAccount.login("me@example.com", password)
 await account.discover()          # what exists and what it can do
 await account.refresh()           # one /state/batch for every device
 
-device = account.devices["ccddeeff0011"]
+device = account.devices["device-42d6d24f"]
 device.current_temperature        # 23.7
 device.target_temperature         # the setpoint the current mode selects
 device.mode, device.modes         # "off", ("off", "heat")

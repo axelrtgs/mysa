@@ -72,8 +72,6 @@ class MysaClimate(MysaEntity, ClimateEntity):
             features |= ClimateEntityFeature.TURN_ON | ClimateEntityFeature.TURN_OFF
         return features
 
-    # Reading.
-
     @property
     def hvac_modes(self) -> list[HVACMode]:
         return [HVAC_MODES[name] for name in self.device.modes if name in HVAC_MODES]
@@ -132,8 +130,6 @@ class MysaClimate(MysaEntity, ClimateEntity):
     @property
     def swing_horizontal_mode(self) -> str | None:
         return self.device.horizontal_swing
-
-    # Writing.
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         await self.write(self.device.set_mode(MYSA_MODES[hvac_mode]))
