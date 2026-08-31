@@ -41,6 +41,13 @@ mysa/
 The integration is not under `packages/` with the SDK: HACS walks the tree for a
 top-level `custom_components/<domain>` and takes no path from `hacs.json`.
 
+| path | contents |
+|---|---|
+| `packages/pymysa` | the SDK; no Home Assistant dependency |
+| `custom_components/mysa` | the integration; depends on `pymysa` |
+| `docs/specs` | the source of truth for every protocol fact |
+| `docs/samples` | redacted captures; the tests run on these |
+
 ## Where model-specific behaviour lives
 
 In `devices/maps.py`, `meanings.py` and the capability sources - nowhere else. A model is

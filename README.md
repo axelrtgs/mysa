@@ -1,110 +1,94 @@
-# mysa
+<img src="https://brands.home-assistant.io/mysa/icon.png" width="96" align="right" alt="">
 
-Python SDK and Home Assistant integration for Mysa smart thermostats.
+# Mysa for Home Assistant
 
-| path | contents |
-|---|---|
-| `packages/pymysa` | Python SDK. No Home Assistant dependency. |
-| `custom_components/mysa` | Home Assistant custom integration. Depends on `pymysa`. |
+Control Mysa baseboard thermostats and mini-split controllers from Home Assistant, over
+Mysa's own cloud API. No account settings are changed, nothing is written to a device
+that the device has not declared it can do, and no value is estimated.
 
-See `docs/specs/` for the specifications everything is written from.
+[![hacs](https://img.shields.io/badge/HACS-custom%20repository-41bdf5)](https://hacs.xyz)
+![home assistant](https://img.shields.io/badge/Home%20Assistant-2026.2%2B-41bdf5)
+![license](https://img.shields.io/badge/license-MIT-blue)
+
+## What you get
+
+One thermostat per device, plus the readings and settings that device actually has:
+
+- **Climate** — modes, setpoint, and on an AC unit the fan speeds and swing positions its
+  codeset can express.
+- **Sensors** — temperature, humidity, and on a baseboard the current, voltage, power,
+  duty cycle and energy. Signal strength, electricity rate and when the device last
+  reported are diagnostics.
+- **Settings** — keypad lock, display unit and brightness, setpoint limits, heater type,
+  early-on, wake on approach, adaptive brightness, temperature offset, Climate+.
+- **Schedules** — whether a hold is in force, when it next changes, and a button to
+  release it.
+
+Everything is gated on what the device declares. A control with fewer than two options is
+not a control, and a field being present is not a feature: a BB-V1-0 takes an
+adaptive-brightness write and has no light sensor to act on it, so it gets no switch.
+
+One request covers the whole account, however many devices it holds.
 
 ## Install
 
-The repository has to be public for HACS to install from it: HACS reads a repository
-through the GitHub API with its own login, but downloads files from
-`raw.githubusercontent.com` and release assets from `github.com` with no authorization
-header on either.
+Add `https://github.com/axelrtgs/mysa` to HACS as a custom repository, category
+**Integration**, then install and restart. Or copy `custom_components/mysa` into your
+`config/custom_components/`.
 
-Add it to HACS as a custom repository, or copy `custom_components/mysa` into your Home
-Assistant `config/custom_components/`. `pymysa` is not on PyPI: the manifest requires it
-by URL, at the wheel published as an asset of the matching release, and Home Assistant
-installs it when the entry is set up.
-
-Then add **Mysa** from *Settings -> Devices & services*. It asks for the email and
+Then add **Mysa** from *Settings → Devices & services*. It asks for the email and
 password you use in the app. The password is used once, for the SRP login; what is kept
 is a refresh token, and the password itself only if you ask for it to be. Where the
-account holds more than one home, a second step asks which to set up - devices in a home
+account holds more than one home, a second step asks which to set up — devices in a home
 you do not choose are neither created nor polled.
 
-You get one thermostat per device, with the modes, fan speeds and swing positions that
-device declares, plus its measurements, its interface settings, and a button to release
-a schedule hold. Everything is gated on what the device declares: a control with fewer
-than two options is not a control, and a field being present is not a feature.
+The polling interval and the home selection are in the integration's options.
 
-The polling interval and the home selection are in the integration's options. One
-request covers the whole account, however many devices it holds.
-
-### Known gaps
-
-Documented in the specs, and not bugs to rediscover:
-
-- An AC-V1-0 serves no capability document, so its controls come from the codeset and
-  from observed value sets (spec 04).
-- Horizontal swing is gated on a codeset declaration neither sample unit serves, so it
-  is not offered even on the unit that reports the field (spec 04).
-- Schedule definitions are not exposed: every capture's day lists are empty (spec 08).
-- The sensor-mode control is not exposed: `tracking.tracking` holds numbers and its
-  declared names are tied to none of them (spec 09).
-- `energy` is declared in kilowatt hours on evidence that does not exist yet, and
-  `powerConsumed` is left unitless. Spec 05 records what settles both.
-
-## Hardware support
+## Supported hardware
 
 | model | status |
 |---|---|
-| BB-V1 | verified |
-| BB-V3 | verified |
-| AC-V1 | verified |
-| BB-V2 | untested |
-| BB-V2 Lite | untested; reports no current, so no power or energy entities |
-| INF-V1 | untested |
-| ST-V1 | untested |
+| Baseboard V1 (`BB-V1`) | verified |
+| Baseboard V3 (`BB-V3`) | verified |
+| AC / mini-split (`AC-V1`) | verified |
+| Baseboard V2, V2 Lite | untested |
+| In-floor (`INF-V1`), Central (`ST-V1`) | untested |
 
-Untested models are implemented from documented protocol facts. An unrecognised field
-resolves to unavailable rather than to a wrong value.
+Untested models are built from the same field maps and declarations as the rest. An
+unrecognised field resolves to unavailable rather than to a wrong value, so an untested
+model is incomplete rather than misleading.
 
-**If you own an untested model**, run the debug harness and send the samples; that is
-what moves a model to verified.
+**If you own one**, `pymysa-debug inspect` reports what it sends and `process` redacts the
+capture for a pull request. That is what moves a model to verified.
+
+## Known limits
+
+- An AC unit serves no capability document, so its controls come from its codeset and
+  from observed value sets. Horizontal swing is not offered even where the field is
+  reported: no codeset seen declares it.
+- Schedule definitions are not exposed — every capture's day lists are empty, so their
+  shape is unknown. Holds are.
+- `energy` is declared in kilowatt hours on evidence that does not exist yet, and
+  `powerConsumed` carries no unit at all.
+- Not affiliated with Mysa. This uses undocumented APIs that may change without notice.
+
+## Under the hood
+
+Two packages: [`pymysa`](packages/pymysa), a Python SDK with no Home Assistant
+dependency, and the integration, which contains no protocol code and never branches on
+model — what a device can do comes from the SDK's capability set.
+
+Every protocol fact is written down in [`docs/specs/`](docs/specs) and tagged `[observed]`
+(captured from hardware) or `[inferred]` (deduced, not confirmed), against the redacted
+captures in [`docs/samples/`](docs/samples) that the tests run on. The specification comes
+first: if it does not cover something, or disagrees with a capture, it is fixed before the
+code is.
 
 ```
-pymysa-debug inspect     # what the device reports
-pymysa-debug exercise    # what it accepts; writes each setting and puts it back
-pymysa-debug process     # redact the captures for a pull request
-```
-
-Raw captures stay local. `process` redacts them into `docs/samples/`. See
-[`docs/specs/07-debug-harness.md`](docs/specs/07-debug-harness.md).
-
-## Development
-
-```
-pytest                            # both packages, from the repository root
+pytest                              # both packages, from the repository root
 ruff check custom_components tests
 mypy --strict custom_components
 ```
 
-`packages/pymysa` carries its own configuration and is checked the same way. Tests run
-against the captures in `docs/samples`, so what is asserted is what a device sends.
-
-Releases are cut by tagging `v<version>`, which publishes the wheel and puts that
-version in the HACS picker. The tag, `manifest.json`'s `version`, the SDK's version and
-the wheel named in the manifest's requirement all have to agree; CI will not publish a
-release where they do not.
-
-## Design
-
-- Devices are read and written through the cloud REST API. It covers every model and
-  every field; the MQTT surface devices also publish on does not, and is not used.
-- Power and energy come from measured current and voltage. Nothing is estimated.
-- Values the device does not report are unavailable, never defaulted.
-- Model-specific behaviour lives in the field maps and the meanings table; nothing
-  else branches on model.
-
-## Provenance
-
-Written from the specifications in `docs/specs/`, which document protocol facts. No
-source from another project is copied. See [`docs/provenance.md`](docs/provenance.md)
-and `NOTICE.md`.
-
-Not affiliated with Mysa. Uses undocumented APIs that may change without notice.
+Written from those specifications. No source from another project is copied — see
+[`docs/provenance.md`](docs/provenance.md) and [`NOTICE.md`](NOTICE.md).
