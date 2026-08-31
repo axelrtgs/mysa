@@ -1,0 +1,12 @@
+{
+  "domain": "mysa",
+  "name": "Mysa",
+  "codeowners": ["@axelrtgs"],
+  "config_flow": true,
+  "documentation": "https://github.com/axelrtgs/mysa/blob/main/packages/homeassistant-mysa/README.md",
+  "integration_type": "hub",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/axelrtgs/mysa/issues",
+  "requirements": ["pymysa==0.1.0"],
+  "version": "0.1.0"
+}

@@ -1,0 +1,109 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Mysa account",
+        "description": "Sign in with the account you use in the Mysa app.",
+        "data": {
+          "username": "Email",
+          "password": "Password",
+          "store_password": "Store the password"
+        },
+        "data_description": {
+          "password": "Used once to sign in. What is kept is a refresh token.",
+          "store_password": "Store the password as well, so a session that cannot be renewed is re-established without asking you."
+        }
+      },
+      "homes": {
+        "title": "Homes",
+        "description": "Devices in a home you do not choose are neither added nor polled.",
+        "data": {
+          "homes": "Homes to set up"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Sign in again",
+        "description": "The session for {username} could not be renewed.",
+        "data": {
+          "password": "Password",
+          "store_password": "Store the password"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "That email and password were rejected.",
+      "cannot_connect": "Could not reach Mysa."
+    },
+    "abort": {
+      "already_configured": "This account is already set up.",
+      "reauth_successful": "Signed in again."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Mysa options",
+        "description": "Changing either of these reloads the integration, which reruns discovery.",
+        "data": {
+          "homes": "Homes to set up",
+          "scan_interval": "Polling interval"
+        },
+        "data_description": {
+          "scan_interval": "One request for the whole account, however many devices it holds."
+        }
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "connected": { "name": "Connection" },
+      "firmware_update": { "name": "Firmware update" }
+    },
+    "button": {
+      "release_hold": { "name": "Release schedule hold" }
+    },
+    "number": {
+      "active_brightness": { "name": "Display brightness in use" },
+      "idle_brightness": { "name": "Display brightness at rest" },
+      "min_setpoint": { "name": "Setpoint minimum" },
+      "max_setpoint": { "name": "Setpoint maximum" }
+    },
+    "select": {
+      "lock": { "name": "Keypad lock" },
+      "temperature_format": { "name": "Display unit" }
+    },
+    "sensor": {
+      "temperature": { "name": "Temperature" },
+      "humidity": { "name": "Humidity" },
+      "current": { "name": "Current" },
+      "voltage": { "name": "Voltage" },
+      "power": { "name": "Power" },
+      "energy": { "name": "Energy" },
+      "power_consumed": { "name": "Power consumed" },
+      "duty_cycle": { "name": "Duty cycle" },
+      "signal_strength": { "name": "Signal strength" },
+      "electricity_rate": { "name": "Electricity rate" },
+      "schedule_next_event": { "name": "Next schedule event" }
+    },
+    "switch": {
+      "proximity": { "name": "Wake on approach" }
+    }
+  },
+  "exceptions": {
+    "write_refused": {
+      "message": "{device} refused that value: {reason}"
+    },
+    "write_unsupported": {
+      "message": "{device} does not have that control: {reason}"
+    },
+    "write_failed": {
+      "message": "Writing to {device} failed: {reason}"
+    },
+    "no_schedule": {
+      "message": "{device} has no schedule to release."
+    },
+    "no_setpoint_limits": {
+      "message": "{device} does not report both setpoint limits, so neither can be changed."
+    }
+  }
+}

@@ -187,11 +187,14 @@ user believing a control works.
 
 ## Missing fields
 
-At setup, each device's critical fields (spec 02: `current_temperature`,
-`target_temperature`, `mode`, `connected`) are checked, and any that resolve to `None`
-are logged once at error with the device and the model. A thermostat that cannot report
-its target temperature is broken whatever it is, and an integration that shows an
+At setup, each device's critical fields (spec 02) are checked and any that resolve to
+`None` are logged once at error with the device and the model. A thermostat that cannot
+report its target temperature is broken whatever it is, and an integration that shows an
 unavailable entity without saying why sends the user looking at their network.
+
+Three of the four are checked: `current_temperature`, `target_temperature` and `mode`.
+`connected` is not, because a device that reports no connection state and one that
+reports itself offline read the same, and the connectivity entity is what says which.
 
 ## Config flow
 
@@ -205,7 +208,10 @@ unavailable entity without saying why sends the user looking at their network.
   with one home skips the step.
 - Options carry the home selection and the polling interval. Changing either reloads the
   entry, which reruns discovery: devices in a home that is no longer chosen are removed
-  and devices in a newly chosen one are added.
+  and devices in a newly chosen one are added. Removal is real: a device the new
+  discovery does not return is dropped from the device registry, which takes its
+  entities with it. Left alone it would stay in the UI as an unavailable thermostat for
+  good.
 - `async_step_reauth` handles a session that cannot be renewed, and asks for the password
   again unless one is stored.
 
