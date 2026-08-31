@@ -237,6 +237,12 @@ some of its own.
 |---|---|
 | `schedGlobalOffset` | early-on on a BB-V1-0; 0 off, 1 on |
 | `Schedule` | the id of the schedule assigned to the device, absent when there is none |
+| `CodeNum` | the codeset an AC-V1-0 drives its head unit with |
+| `Brand` | the head unit's brand, and the codeset's brand id |
+
+A field map names the record as a section like any other, and nothing mapped to it is
+writable: `/devices` is read in this project and no write path to it has been
+established, so a setting that lives there is reported and not offered as a control.
 
 ## Early-on `[observed]`
 
@@ -309,6 +315,21 @@ Anything that confirms a write by reading it back will report it as never applie
 A BB-V3-0 accepts `intensityMode` 0, 1, 2 and 3. Only 0 (fixed) and 1 (adaptive) are
 named, from watching the app; 2 and 3 are values the device takes and nothing has been
 seen to select.
+
+## A frozen section `[observed]`
+
+A BB-V3-0's `power` section is written once and does not move. Its `reported` timestamp
+sits hours behind the device's own last report while `voltage`, `current` and `wattage`
+hold the values of some earlier on-cycle - 240 V, 12458 and 2989 - and the same three
+numbers come back a day later with the heater off.
+
+`latestTelemetry.reading` carries the live `current` and `dutyCycle`, and no wattage. The
+app shows a live wattage for this model and none for the others, and reads zero with the
+heater off, so what it shows is derived rather than read: volts times amps (spec 05).
+
+So a BB-V3-0 reads `current` and `duty_cycle` from the telemetry reading, and `wattage`
+is not mapped at all. `voltage` stays on the frozen section: a mains voltage that does
+not change is not misleading for being old.
 
 ## Electrical units
 
@@ -412,6 +433,7 @@ for as long as that interval.
 | `brightness_mode` | `physicalInterface.reported.intensityMode` |
 | `proximity` | `physicalInterface.reported.wakeOnApproach` |
 | `heater_type` | `bbConfig.reported.controlType` |
+| `early_on` | `schedGlobalOffset` on the device record |
 | `firmware` | `identity.reported.fw` |
 | `family` | `identity.reported.family` |
 
@@ -423,12 +445,15 @@ declares `interface.wakeOnApproach` read-only and does not declare `intensityMod
 ### BB-V3-0 `[observed]`
 
 As BB-V1-0, with `serial` from `identity.reported.serial`, without `signal_strength` —
-its telemetry reading carries no `rssi` — and additionally:
+its telemetry reading carries no `rssi` — without `wattage`, whose section is frozen
+above — and additionally:
 
 | semantic | source |
 |---|---|
 | `secondary_raw_temperature` | `latestTelemetry.reading.secondaryRawTemperature` |
 | `energy` | `latestTelemetry.reading.energy` |
+| `current` | `latestTelemetry.reading.current`, not the frozen `power` section |
+| `duty_cycle` | `latestTelemetry.reading.dutyCycle` |
 | `fault` | `power.reported.fault` |
 | `remote_temperature` | `tracking.reported.remoteTemperature` |
 | `tracking_mode` | `tracking.reported.tracking` |
@@ -459,6 +484,8 @@ its telemetry reading carries no `rssi` — and additionally:
 | `lock` | `physicalInterface.reported.lockout` |
 | `temperature_format` | `physicalInterface.reported.format` |
 | `active_brightness` / `idle_brightness` | `physicalInterface.reported.activeIntensity` / `idleIntensity` |
+| `codeset` | `CodeNum` on the device record |
+| `remote_brand` | `Brand.Brand` on the device record |
 | `firmware` | `identity.reported.fw` |
 | `family` | `identity.reported.family` |
 

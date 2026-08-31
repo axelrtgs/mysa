@@ -100,8 +100,14 @@ next `refresh()`. Identity is stable, so a caller may hold it.
 | `setpoint_range` | the bounds a setpoint write must fall inside, for the section the mode selects |
 | `declared_setpoint_range` | step 2 alone: the range the device declares, before a lockout pair narrows it |
 | `setpoint_step` | the resolution a setpoint is accepted at |
+| `bounds(name)` | the range a field's declared shape allows (spec 02) |
 | `firmware_update` | update availability, after `refresh_firmware()` |
 | `raw` | the device's own `/state/batch` document, for a caller that needs a field the SDK does not name |
+
+`power` is watts now: the device's measurement where it comes from a section that moves,
+and volts times amps otherwise (spec 02). A field map can name the device record as its
+section, and nothing mapped there is writable - `early_on` on a BB-V1-0 and an AC unit's
+`codeset` are read, not offered as controls.
 
 A semantic property whose field the device does not report is `None`. Absent values are
 never defaulted or estimated (spec 00), so `None` and `0` stay distinct.
@@ -147,7 +153,8 @@ an AC unit declares no step and is written at the same resolution. `[observed]`
 class Capability(Enum):
     HEAT, COOL, FAN, VERTICAL_SWING, HORIZONTAL_SWING,
     CURRENT, ENERGY, LOCK, PROXIMITY, BRIGHTNESS, ADAPTIVE_BRIGHTNESS,
-    TEMPERATURE_FORMAT, SENSOR_MODE, SETPOINT_LIMITS, SCHEDULE, THERMOSTATIC
+    TEMPERATURE_FORMAT, SENSOR_MODE, SETPOINT_LIMITS, SCHEDULE, THERMOSTATIC,
+    HEATER_TYPE, TEMPERATURE_OFFSET, EARLY_ON
 ```
 
 A capability is declared from three sources in order (spec 04): the capability document
@@ -222,6 +229,9 @@ it, which is indistinguishable at the transport from a device that simply declin
 | `set_fan_speed(name)`, `set_vertical_swing(name)`, `set_horizontal_swing(name)` | `modes` |
 | `set_lock(name)`, `set_proximity(bool)`, `set_brightness(active, idle)` | `physicalInterface` |
 | `set_adaptive_brightness(bool)` | `physicalInterface.intensityMode` |
+| `set_heater_type(name)` | `bbConfig.controlType` |
+| `set_ambient_offset(degrees)` | `tracking.ambientOffset` |
+| `set_early_on(bool)` | `cloudFeatures.cloudEarlyOn.enabled` |
 | `set_thermostatic(bool)` | `modes.isThermostatic`, which the app calls Climate+ |
 | `set_temperature_format(name)` | `physicalInterface.format` |
 | `set_setpoint_limits(low, high)` | the active setpoint section |

@@ -36,6 +36,15 @@ SELECTS: tuple[MysaSelectDescription, ...] = (
         value_fn=lambda device: device.lock,
         set_fn=lambda device, option: device.set_lock(option),
     ),
+    # The values differ by model: a BB-V1-0's 4 is radiant and a BB-V3-0 has no 4.
+    MysaSelectDescription(
+        key="heater_type",
+        translation_key="heater_type",
+        entity_category=EntityCategory.CONFIG,
+        capability=Capability.HEATER_TYPE,
+        value_fn=lambda device: device.heater_type,
+        set_fn=lambda device, option: device.set_heater_type(option),
+    ),
     MysaSelectDescription(
         key="temperature_format",
         translation_key="temperature_format",

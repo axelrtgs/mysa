@@ -101,6 +101,18 @@ class Writing:
         """Climate+ in the app: follow a setpoint rather than the unit's own program."""
         await self._set("thermostatic", 1 if on else 0)
 
+    async def set_heater_type(self, heater: str) -> None:
+        """The load a baseboard drives. The values differ by model (spec 02)."""
+        await self._set("heater_type", heater)
+
+    async def set_ambient_offset(self, degrees: float) -> None:
+        """The correction applied to the room reading."""
+        await self._set("ambient_offset", degrees)
+
+    async def set_early_on(self, on: bool) -> None:
+        """Whether the backend starts heating ahead of a scheduled setpoint."""
+        await self._set("early_on", on)
+
     async def set_temperature_format(self, unit: str) -> None:
         await self._set("temperature_format", unit)
 
@@ -123,7 +135,10 @@ class Writing:
             raise UnsupportedCommand(f"{self.model} does not report {name}")
         wire = value_for(source.section, source.field, value, self.model)
         self._check(source, name, wire)
-        await self._write(source.section, {source.field: wire}, wait=wait)
+        # `cloudFeatures.cloudEarlyOn` holds `{"enabled": bool}`: the field is the
+        # object, and the write carries it whole.
+        body = {source.nested: wire} if source.nested else wire
+        await self._write(source.section, {source.field: body}, wait=wait)
 
     def _check(self, source: Source, name: str, wire: Any) -> None:
         """Refuse locally what the device's own declaration refuses silently.

@@ -22,9 +22,6 @@ from .const import DOMAIN
 from .coordinator import MysaConfigEntry, MysaCoordinator
 from .entity import MysaEntity
 
-#: Where the device declares no range of its own, the display's own scale.
-BRIGHTNESS_RANGE = (0.0, 100.0)
-
 
 @dataclass(frozen=True, kw_only=True)
 class MysaNumberDescription(NumberEntityDescription):
@@ -34,9 +31,7 @@ class MysaNumberDescription(NumberEntityDescription):
     value_fn: Callable[[MysaDevice], float | None]
     set_fn: Callable[[MysaDevice, float], Coroutine[Any, Any, None]]
     #: Bounds from the device, where it declares any.
-    range_fn: Callable[[MysaDevice], tuple[float, float] | None] = (
-        lambda _: BRIGHTNESS_RANGE
-    )
+    range_fn: Callable[[MysaDevice], tuple[float, float] | None]
 
 
 def _limits(device: MysaDevice) -> tuple[float, float]:
@@ -70,6 +65,7 @@ NUMBERS: tuple[MysaNumberDescription, ...] = (
         capability=Capability.BRIGHTNESS,
         value_fn=lambda device: device.active_brightness,
         set_fn=lambda device, value: device.set_brightness(active=int(value)),
+        range_fn=lambda device: device.bounds("active_brightness"),
     ),
     MysaNumberDescription(
         key="idle_brightness",
@@ -81,9 +77,22 @@ NUMBERS: tuple[MysaNumberDescription, ...] = (
         capability=Capability.BRIGHTNESS,
         value_fn=lambda device: device.idle_brightness,
         set_fn=lambda device, value: device.set_brightness(idle=int(value)),
+        range_fn=lambda device: device.bounds("idle_brightness"),
     ),
     # Bounded by what the device declares, not by the limit being replaced: a lockout
     # that bounded itself could only ever be narrowed.
+    MysaNumberDescription(
+        key="ambient_offset",
+        translation_key="ambient_offset",
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        native_step=0.5,
+        mode=NumberMode.BOX,
+        entity_category=EntityCategory.CONFIG,
+        capability=Capability.TEMPERATURE_OFFSET,
+        value_fn=lambda device: device.ambient_offset,
+        set_fn=lambda device, value: device.set_ambient_offset(value),
+        range_fn=lambda device: device.bounds("ambient_offset"),
+    ),
     MysaNumberDescription(
         key="min_setpoint",
         translation_key="min_setpoint",

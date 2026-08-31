@@ -17,7 +17,7 @@ from ..meanings import name_of
 from ..schedules import ScheduleHold
 from ..transport.rest import MysaRest
 from .declaration import Declaration
-from .maps import FIELDS, READING, TELEMETRY, Source
+from .maps import FIELDS, READING, RECORD, TELEMETRY, Source
 from .readings import Readings
 from .writing import CONFIRM_INTERVAL, CONFIRM_TIMEOUT, Writing
 
@@ -125,6 +125,8 @@ class MysaDevice(Readings, Declaration, Writing):
 
     def _section(self, name: str) -> dict[str, Any]:
         """The values in force in a section, shadow pair or not."""
+        if name == RECORD:
+            return self._record
         if name == READING:
             telemetry = self._document.get(TELEMETRY)
             reading = telemetry.get("reading") if isinstance(telemetry, dict) else None

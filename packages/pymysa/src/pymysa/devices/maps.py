@@ -11,6 +11,8 @@ from dataclasses import dataclass
 
 TELEMETRY = "latestTelemetry"
 READING = "latestTelemetry.reading"
+#: The device record from `/devices`. Read-only: no write path to it is established.
+RECORD = "record"
 
 
 @dataclass(frozen=True)
@@ -60,10 +62,21 @@ _BASEBOARD = SHARED | _sources(
     heater_type=("bbConfig", "controlType"),
 )
 
-BB_V1 = _BASEBOARD | _sources(signal_strength=(READING, "rssi"))
+BB_V1 = _BASEBOARD | _sources(
+    signal_strength=(READING, "rssi"),
+    early_on=(RECORD, "schedGlobalOffset"),
+)
 
-#: No `rssi` in its telemetry reading, so no signal strength.
-BB_V3 = _BASEBOARD | _sources(
+#: No `rssi` in its telemetry reading, so no signal strength, and no `wattage`: its
+#: `power` section is frozen, so the live current and duty cycle come from telemetry and
+#: the wattage is derived from volts and amps (spec 02).
+BB_V3 = _sources(**{
+    name: (source.section, source.field)
+    for name, source in _BASEBOARD.items()
+    if name != "wattage"
+}) | _sources(
+    current=(READING, "current"),
+    duty_cycle=(READING, "dutyCycle"),
     serial=("identity", "serial"),
     secondary_raw_temperature=(READING, "secondaryRawTemperature"),
     energy=(READING, "energy"),
@@ -84,6 +97,8 @@ AC_V1 = _sources(**{
     if name != "power_consumed"
 }) | _sources(
     signal_strength=(READING, "rssi"),
+    codeset=(RECORD, "CodeNum"),
+    remote_brand=(RECORD, "Brand", "Brand"),
     target_temperature_cool=("targetCool", "setpoint"),
     target_temperature_auto=("targetAuto", "setpoint"),
     fan_speed=("modes", "fan_mode"),

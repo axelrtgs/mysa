@@ -43,8 +43,10 @@ power_w = voltage * current
 Duty cycle is a separate diagnostic percentage and is not a factor in instantaneous
 power.
 
-Where a device reports `energy`, `wattage` or `powerConsumed` directly, the device value
-is used in preference to any derivation.
+Where a device reports `wattage` from a section that moves, that value is used in
+preference to the derivation. A BB-V3-0's section does not move (spec 02), so that model
+derives - which is what its own app does: it is the only model whose app shows a live
+wattage, and it reads zero with the heater off.
 
 Devices that do not report current expose no power or energy entities.
 

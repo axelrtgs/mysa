@@ -57,6 +57,7 @@
   "entity": {
     "binary_sensor": {
       "connected": { "name": "Connection" },
+      "early_on": { "name": "Early on" },
       "firmware_update": { "name": "Firmware update" }
     },
     "button": {
@@ -65,16 +66,19 @@
     "number": {
       "active_brightness": { "name": "Active brightness" },
       "idle_brightness": { "name": "Idle brightness" },
+      "ambient_offset": { "name": "Temperature offset" },
       "min_setpoint": { "name": "Setpoint minimum" },
       "max_setpoint": { "name": "Setpoint maximum" }
     },
     "select": {
+      "heater_type": { "name": "Heater type" },
       "lock": { "name": "Keypad lock" },
       "temperature_format": { "name": "Display unit" }
     },
     "sensor": {
       "temperature": { "name": "Temperature" },
       "humidity": { "name": "Humidity" },
+      "last_reported": { "name": "Last reported" },
       "current": { "name": "Current" },
       "voltage": { "name": "Voltage" },
       "power": { "name": "Power" },
@@ -82,10 +86,13 @@
       "power_consumed": { "name": "Power consumed" },
       "duty_cycle": { "name": "Duty cycle" },
       "signal_strength": { "name": "Signal strength" },
+      "codeset": { "name": "Codeset" },
       "electricity_rate": { "name": "Electricity rate" },
+      "remote_brand": { "name": "Remote brand" },
       "schedule_next_event": { "name": "Next schedule event" }
     },
     "switch": {
+      "early_on": { "name": "Early on" },
       "proximity": { "name": "Wake on approach" },
       "adaptive_brightness": { "name": "Adaptive brightness" },
       "thermostatic": { "name": "Climate+" }

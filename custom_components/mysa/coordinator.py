@@ -6,6 +6,7 @@ polls `/state/batch` for every device the entry includes.
 
 from __future__ import annotations
 
+import asyncio
 import logging
 from collections.abc import Callable
 from datetime import timedelta
@@ -71,8 +72,15 @@ class MysaCoordinator(DataUpdateCoordinator[None]):
             _LOGGER.warning("%s could not be read and is not set up: %s", device_id, reason)
 
     async def _async_update_data(self) -> None:
+        # A coordinator will not start a refresh while one is in flight, and the shared
+        # session allows five minutes, so a read with no deadline of its own stops the
+        # entry updating for as long as it hangs.
+        deadline = self.update_interval.total_seconds() if self.update_interval else 60
         try:
-            await self.account.refresh()
+            async with asyncio.timeout(deadline):
+                await self.account.refresh()
+        except TimeoutError as err:
+            raise UpdateFailed(f"state read took longer than {deadline:.0f}s") from err
         except AuthenticationError as err:
             raise ConfigEntryAuthFailed(str(err)) from err
         except MysaError as err:

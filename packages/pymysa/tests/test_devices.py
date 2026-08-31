@@ -9,7 +9,8 @@ BB_V3_DOC = {
     "identity": {"reported": {"model": "BB-V3-0", "fw": "5.1.9", "serial": "SCR34NRTZN"}},
     "latestTelemetry": {
         "isConnected": True,
-        "reading": {"roomTemperature": 23.7, "humidity": 47, "energy": 0, "dutyCycle": 0},
+        "reading": {"roomTemperature": 23.7, "humidity": 47, "energy": 0,
+                    "dutyCycle": 0, "current": 0},
     },
     "targetHeat": {
         "desired": {"setpoint": 16, "lockoutMin": 6, "lockoutMax": 23},
@@ -79,7 +80,10 @@ def test_values_come_from_the_models_own_field_map():
 
     assert device.current_temperature == 23.7
     assert device.target_temperature == 16
-    assert device.wattage == 0
+    # The `power` section is frozen, so wattage is unmapped and power is derived.
+    assert device.wattage is None
+    assert device.current == 0
+    assert device.power == 0.0
     assert device.serial == "SCR34NRTZN"
 
 

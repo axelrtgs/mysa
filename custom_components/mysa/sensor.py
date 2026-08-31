@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -42,6 +42,12 @@ class MysaSensorDescription(SensorEntityDescription):
     exists_fn: Callable[[MysaDevice, Home | None], bool] | None = None
     #: Whether it still has it. Defaults to existing being enough.
     available_fn: Callable[[MysaDevice], bool] | None = None
+
+
+def _last_reported(device: MysaDevice) -> datetime | None:
+    """When the device last spoke to the backend, not when this last polled."""
+    seconds = device.last_connected
+    return datetime.fromtimestamp(seconds, tz=UTC) if seconds else None
 
 
 def _next_event(device: MysaDevice) -> datetime | None:
@@ -89,7 +95,7 @@ SENSORS: tuple[MysaSensorDescription, ...] = (
         device_class=SensorDeviceClass.POWER,
         native_unit_of_measurement=UnitOfPower.WATT,
         state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda device, _: device.wattage,
+        value_fn=lambda device, _: device.power,
     ),
     # Kilowatt hours on evidence that does not exist yet (spec 05).
     MysaSensorDescription(
@@ -131,6 +137,25 @@ SENSORS: tuple[MysaSensorDescription, ...] = (
         translation_key="electricity_rate",
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda _, home: home.electricity_rate if home else None,
+    ),
+    MysaSensorDescription(
+        key="last_reported",
+        translation_key="last_reported",
+        device_class=SensorDeviceClass.TIMESTAMP,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda device, _: _last_reported(device),
+    ),
+    MysaSensorDescription(
+        key="codeset",
+        translation_key="codeset",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda device, _: device.codeset,
+    ),
+    MysaSensorDescription(
+        key="remote_brand",
+        translation_key="remote_brand",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda device, _: device.remote_brand,
     ),
     MysaSensorDescription(
         key="schedule_next_event",

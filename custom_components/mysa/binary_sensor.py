@@ -12,7 +12,7 @@ from homeassistant.components.binary_sensor import (
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
-from pymysa import MysaDevice
+from pymysa import Capability, MysaDevice
 
 from .coordinator import MysaConfigEntry, MysaCoordinator
 from .entity import MysaEntity
@@ -29,6 +29,8 @@ async def async_setup_entry(
         entities.append(MysaConnectivity(coordinator, device))
         if device.firmware_update is not None:
             entities.append(MysaFirmware(coordinator, device))
+        if device.early_on is not None and not device.supports(Capability.EARLY_ON):
+            entities.append(MysaEarlyOn(coordinator, device))
     async_add_entities(entities)
 
 
@@ -80,3 +82,21 @@ class MysaFirmware(MysaEntity, BinarySensorEntity):
         if update is None:
             return None
         return {"installed_version": update.installed, "latest_version": update.allowed}
+
+
+class MysaEarlyOn(MysaEntity, BinarySensorEntity):
+    """Early-on where the device reports it and nothing can write it.
+
+    A BB-V1-0 holds the setting on its device record, and no write path to the record
+    has been established (spec 02), so it is reported and not offered as a switch.
+    """
+
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_translation_key = "early_on"
+
+    def __init__(self, coordinator: MysaCoordinator, device: MysaDevice) -> None:
+        super().__init__(coordinator, device, "early_on")
+
+    @property
+    def is_on(self) -> bool | None:
+        return self.device.early_on

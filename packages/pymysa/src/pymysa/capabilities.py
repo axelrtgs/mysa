@@ -171,6 +171,9 @@ class Capability(Enum):
     SETPOINT_LIMITS = "setpoint_limits"
     SCHEDULE = "schedule"
     THERMOSTATIC = "thermostatic"
+    HEATER_TYPE = "heater_type"
+    TEMPERATURE_OFFSET = "temperature_offset"
+    EARLY_ON = "early_on"
 
 
 #: Codeset control name to the capability it declares.

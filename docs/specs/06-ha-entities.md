@@ -19,6 +19,11 @@ A device in a home the entry does not include is neither created nor polled, bec
 | polling interval | 60 seconds | options |
 | homes | every home | options; the config flow asks where there is more than one |
 
+A poll that has not returned within the polling interval is abandoned and the update
+fails. Home Assistant's shared session allows five minutes, and a coordinator will not
+start a refresh while one is in flight, so a slow read would otherwise stop the entry
+updating for as long as it hangs, silently.
+
 `refresh_firmware()` runs at setup and then at most once every 24 hours, from inside the
 coordinator's update: it costs one request per device (spec 09) to answer something that
 moves a few times a year.
@@ -118,10 +123,15 @@ list contains `off` and at least one other mode.
 | `signal_strength` | `signal_strength` | dBm | signal strength, measurement, diagnostic |
 | `electricity_rate` | the home's `ERate` | none | diagnostic |
 | `schedule_next_event` | `device.schedule.next_event` | | timestamp, diagnostic |
+| `last_reported` | `device.last_connected` | | timestamp, diagnostic |
 
 `energy` is declared as kilowatt hours on evidence that does not exist yet, which is
 what puts it on the energy dashboard; `power_consumed` is declared with no unit for the
 same absence of evidence. Spec 05 records why the two differ and what settles it.
+
+`last_reported` is when the device itself last spoke to the backend, which is not when
+the integration last polled. The two answer different questions, and only the first says
+whether a value that looks stuck is stuck at the device, in the backend, or here.
 
 `electricity_rate` carries no currency: the payload serves a bare number and names no
 currency anywhere (spec 02). It is a diagnostic value, and no cost is derived from it -

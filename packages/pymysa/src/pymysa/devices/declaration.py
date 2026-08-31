@@ -11,8 +11,8 @@ from typing import Any
 
 from ..capabilities import CONTROL_CAPABILITY, Capability
 from ..meanings import name_of, value_for
-from ..shapes import same_kind
-from .maps import Source
+from ..shapes import same_kind, shape_of
+from .maps import RECORD, Source
 
 #: Modes a model has been seen to accept, where it serves no capability document.
 #: An AC-V1-0 returns 404 for one (spec 04). `[observed]`
@@ -86,6 +86,14 @@ class Declaration:
         source = self._source(self.active_setpoint)
         return self._declared_range(source) if source is not None else None
 
+    def bounds(self, name: str) -> tuple[float, float] | None:
+        """The range a field's declared shape allows, where it declares one (spec 02)."""
+        source = self._source(name)
+        shape = shape_of(source.section, source.field) if source else None
+        if shape is None or shape.low is None or shape.high is None:
+            return None
+        return float(shape.low), float(shape.high)
+
     def _lockout_range(self, section: str) -> tuple[float, float] | None:
         """The user-set limit the section reports, where it reports one."""
         low = _measure(self._reported(section, LOCKOUT[0]))
@@ -133,6 +141,12 @@ class Declaration:
             found.add(Capability.ADAPTIVE_BRIGHTNESS)
         if self._controls("thermostatic"):
             found.add(Capability.THERMOSTATIC)
+        if self._offers("heater_type"):
+            found.add(Capability.HEATER_TYPE)
+        if self._controls("ambient_offset"):
+            found.add(Capability.TEMPERATURE_OFFSET)
+        if self._controls("early_on"):
+            found.add(Capability.EARLY_ON)
         if self._offers("temperature_format"):
             found.add(Capability.TEMPERATURE_FORMAT)
         if self._offers("tracking_mode"):
@@ -185,7 +199,7 @@ class Declaration:
     def _controls(self, name: str) -> bool:
         """Whether the device reports this field and will accept a write to it."""
         source = self._source(name)
-        if source is None or not self._has(name):
+        if source is None or not self._has(name) or source.section == RECORD:
             return False
         setting = self._settings.get((source.section, source.field))
         if setting is not None:
@@ -291,6 +305,7 @@ _CONTROL_FIELD: dict[Capability, str] = {
     Capability.LOCK: "lock",
     Capability.TEMPERATURE_FORMAT: "temperature_format",
     Capability.SENSOR_MODE: "tracking_mode",
+    Capability.HEATER_TYPE: "heater_type",
 }
 
 #: Sets a device does not declare and that are established by observation (spec 02).

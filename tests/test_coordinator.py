@@ -109,3 +109,20 @@ async def test_a_device_reporting_everything_says_nothing(
     await setup_account(hass, [load(BB_V3)])
 
     assert "reports no" not in caplog.text
+
+
+async def test_a_poll_that_runs_long_fails_rather_than_stalling_the_entry(
+    hass: HomeAssistant, freezer: FrozenDateTimeFactory
+) -> None:
+    """A coordinator will not start a refresh while one is in flight, so a read with no
+    deadline of its own stops the entry updating for as long as it hangs (spec 06)."""
+    setup = await setup_account(hass, [load(BB_V3)])
+
+    async def overrun(device_ids: list[str]) -> dict[str, object]:
+        raise TimeoutError
+
+    setup.rest.get_state_batch = overrun  # type: ignore[method-assign]
+    await _poll(hass, freezer, 61)
+
+    assert setup.entry.runtime_data.last_update_success is False
+    assert hass.states.get(BASEBOARD).state == STATE_UNAVAILABLE

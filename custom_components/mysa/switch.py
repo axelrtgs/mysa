@@ -46,6 +46,16 @@ SWITCHES: tuple[MysaSwitchDescription, ...] = (
         ),
         set_fn=lambda device, on: device.set_adaptive_brightness(on),
     ),
+    # A BB-V1-0 holds it on the device record, which has no write path (spec 02), so
+    # that model reports it as a binary sensor instead.
+    MysaSwitchDescription(
+        key="early_on",
+        translation_key="early_on",
+        entity_category=EntityCategory.CONFIG,
+        capability=Capability.EARLY_ON,
+        value_fn=lambda device: device.early_on,
+        set_fn=lambda device, on: device.set_early_on(on),
+    ),
     MysaSwitchDescription(
         key="thermostatic",
         translation_key="thermostatic",

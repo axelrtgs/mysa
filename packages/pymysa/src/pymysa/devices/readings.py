@@ -165,6 +165,22 @@ class Readings:
         return self._number("wattage")
 
     @property
+    def power(self) -> float | None:
+        """Watts now.
+
+        The device's own measurement where it comes from a section that moves, and
+        otherwise volts times amps, which is what a BB-V3-0's app does: its `power`
+        section is frozen and its telemetry carries the live current (spec 02).
+        """
+        wattage = self._number("wattage")
+        if wattage is not None:
+            return wattage
+        volts, milliamps = self._number("voltage"), self._number("current")
+        if volts is None or milliamps is None:
+            return None
+        return round(volts * milliamps / 1000, 1)
+
+    @property
     def energy(self) -> float | None:
         return self._number("energy")
 
@@ -237,6 +253,18 @@ class Readings:
     def early_on(self) -> bool | None:
         """Whether the backend starts heating ahead of a scheduled setpoint."""
         return self._flag("early_on")
+
+    @property
+    def codeset(self) -> str | None:
+        """The codeset an AC controller drives its head unit with."""
+        value = self._value("codeset")
+        return str(value) if value is not None else None
+
+    @property
+    def remote_brand(self) -> str | None:
+        """The head unit's brand, as the codeset names it."""
+        value = self._value("remote_brand")
+        return value if isinstance(value, str) else None
 
     @property
     def signal_strength(self) -> int | None:

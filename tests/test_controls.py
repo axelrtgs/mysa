@@ -244,3 +244,54 @@ async def test_the_hold_button_goes_away_with_the_schedule(hass: HomeAssistant) 
 
     assert hass.states.get("button.device_728d8928_release_schedule_hold").state == "unavailable"
     assert hass.states.get("sensor.device_728d8928_next_schedule_event").state == "unavailable"
+
+
+async def test_early_on_is_a_switch_where_it_can_be_written(hass: HomeAssistant) -> None:
+    """A BB-V3-0 holds it in `cloudFeatures`; a BB-V1-0 holds it on the device record,
+    which has no write path (spec 02)."""
+    setup = await setup_account(hass, [load(BB_V3), load(BB_V1)])
+    hasten(setup)
+
+    assert hass.states.get("switch.device_42d6d24f_early_on").state == "on"
+    assert hass.states.get("switch.device_728d8928_early_on") is None
+    assert hass.states.get("binary_sensor.device_728d8928_early_on") is not None
+
+    await hass.services.async_call(
+        Platform.SWITCH,
+        SERVICE_TURN_OFF,
+        {ATTR_ENTITY_ID: "switch.device_42d6d24f_early_on"},
+        blocking=True,
+    )
+    await hass.async_block_till_done()
+
+    assert setup.rest.writes == [
+        ("device-42d6d24f", {"source": 3, "cloudFeatures": {"cloudEarlyOn": {"enabled": False}}})
+    ]
+
+
+async def test_the_heater_type_offers_the_values_the_model_declares(
+    hass: HomeAssistant,
+) -> None:
+    """A BB-V1-0's 4 is radiant and a BB-V3-0 has no 4 at all (spec 02)."""
+    await setup_account(hass, [load(BB_V3), load(BB_V1)])
+
+    assert hass.states.get("select.device_42d6d24f_heater_type").attributes["options"] == [
+        "baseboard", "fan forced", "radiant",
+    ]
+    assert hass.states.get("select.device_728d8928_heater_type").attributes["options"] == [
+        "baseboard", "radiant", "fan forced, short cycle",
+        "fan forced, medium cycle", "fan forced, long cycle",
+    ]
+
+
+async def test_a_bb_v3_derives_its_wattage_from_the_live_current(
+    hass: HomeAssistant,
+) -> None:
+    """Its `power` section is frozen at an earlier on-cycle (spec 02)."""
+    sample = load(BB_V3)
+    assert sample.state["power"]["reported"]["wattage"] == 2989
+
+    await setup_account(hass, [sample])
+
+    assert hass.states.get("sensor.device_42d6d24f_power").state == "0.0"
+    assert hass.states.get("sensor.device_42d6d24f_current").state == "0"
